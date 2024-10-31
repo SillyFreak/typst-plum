@@ -1,16 +1,16 @@
 #import "template.typ" as template: *
-#import "/src/lib.typ" as my-package
+#import "/src/lib.typ" as plum
 
 #let package-meta = toml("/typst.toml").package
 #let date = none
 // #let date = datetime(year: ..., month: ..., day: ...)
 
 #show: manual(
-  title: "Template",
+  title: "Plum",
   // subtitle: "...",
   authors: package-meta.authors.map(a => a.split("<").at(0).trim()),
   abstract: [
-    A template for typst packages
+    _Plum_ lets you create UML class diagrams in Typst; inspired by but _not_ compatible with PlantUML.
   ],
   url: package-meta.repository,
   version: package-meta.version,
@@ -18,7 +18,7 @@
 )
 
 // the scope for evaluating expressions and documentation
-#let scope = (my-package: my-package)
+#let scope = (plum: plum)
 
 = Introduction
 
@@ -32,14 +32,14 @@ This is a template for typst packages. It provides the #ref-fn("id()") function:
 
 Here is the function in action:
 #man-style.show-example(mode: "markup", dir: ttb, scope: scope, ```typ
-one equals #my-package.id[one], 1 = #my-package.id(1)
+one equals #plum.id[one], 1 = #plum.id(1)
 ```)
 
 = Module reference
 
 #module(
   read("/src/lib.typ"),
-  name: "my-package",
+  name: "plum",
   label-prefix: none,
   scope: scope,
 )
