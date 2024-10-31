@@ -9,7 +9,13 @@ To add this package to your project, use this:
 ```typ
 #import "@preview/plum:0.0.1": *
 
-#id[Hello World]
+#let expr = "2 * (2 + x)"
+
+#eval(mode: "math", expr)
+
+#plum.parse(expr)
+
+#plum.eval(expr, x: 3)
 ```
 
 ![Example](./thumbnail.png)

@@ -22,17 +22,21 @@
 
 = Introduction
 
-This is a template for typst packages. It provides the #ref-fn("id()") function:
+This is a template for typst packages. It provides the #ref-fn("parse()") and #ref-fn("eval()") functions:
 
 #file-code("lib.typ", {
   let lib = raw(block: true, lang: "typ", read("/src/lib.typ").trim(at: end))
-  lib = crudo.lines(lib, "10-")
+  lib = crudo.lines(lib, "14-17,30-")
   lib
 })
 
-Here is the function in action:
+Here they are in action:
 #man-style.show-example(mode: "markup", dir: ttb, scope: scope, ```typ
-one equals #plum.id[one], 1 = #plum.id(1)
+$2 * (2 + x) arrow.double.long$ #plum.parse("2 * (2 + x)")
+```)
+
+#man-style.show-example(mode: "markup", dir: ttb, scope: scope, ```typ
+$2 * (2 + x) arrow.double.long^(x=3)$ #plum.eval("2 * (2 + x)", x: 3)
 ```)
 
 = Module reference
