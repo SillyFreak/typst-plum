@@ -1,50 +1,37 @@
-// taken from https://github.com/lalrpop/lalrpop/blob/793df8d6b4fa1c1bc9c253ee7c173d25cb202a9d/doc/calculator/src/calculator6.lalrpop
-// Copyright (c) 2015 The LALRPOP Project Developers
-// used under the MIT license:
-// https://github.com/lalrpop/lalrpop/blob/793df8d6b4fa1c1bc9c253ee7c173d25cb202a9d/LICENSE-MIT
+use crate::model::{Diagram, Classifier, ClassifierKind};
 
-use std::str::FromStr;
-use crate::ast::{Expr, Operator};
-
-use lalrpop_util::ParseError;
+// use lalrpop_util::ParseError;
 
 grammar;
 
-Tier<Op, NextTier>: Expr<'input> = {
-    <left: Tier<Op, NextTier>> <operator: Op> <right: NextTier> => {
-        let left = Box::new(left);
-        let right = Box::new(right);
-        Expr::Binary { operator, left, right }
-    },
-    NextTier
+pub Diagram: Diagram<'input> = {
+    <classifiers: Classifier*> => {
+        Diagram { classifiers }
+    }
 };
 
-pub Expr = Tier<ExprOp, Factor>;
-Factor = Tier<FactorOp, Term>;
-
-ExprOp: Operator = {
-    "+" => Operator::Add,
-    "-" => Operator::Sub,
+Classifier: Classifier<'input> = {
+    <is_abstract: "abstract"?> <is_final: "final"?> <kind: ClassifierKind> <name: Name> => {
+        let (kind, stereotype) = kind;
+        let is_abstract = is_abstract.is_some() || kind == ClassifierKind::Interface;
+        let is_final = is_final.is_some();
+        let mut stereotypes = Vec::new();
+        stereotypes.extend(stereotype);
+        Classifier { is_abstract, is_final, kind, name, stereotypes }
+    }
 };
 
-FactorOp: Operator = {
-    "*" => Operator::Mul,
-    "/" => Operator::Div,
-};
+ClassifierKind: (ClassifierKind, Option<&'input str>) = {
+    "class" => (ClassifierKind::Class, None),
+    "dataType" => (ClassifierKind::DataType, None),
+    "enumeration" => (ClassifierKind::Enumeration, None),
+    "interface" => (ClassifierKind::Interface, None),
+    "primitive" => (ClassifierKind::Primitive, None),
+    "annotation" => (ClassifierKind::Class, Some(<>)),
+    "exception" => (ClassifierKind::Class, Some(<>)),
+    "struct" => (ClassifierKind::Class, Some(<>)),
+}
 
-Term: Expr<'input> = {
-    Num => Expr::Number { value: <> },
-    Var => Expr::Variable { name: <> },
-    "(" <Expr> ")"
-};
-
-Num: i32 = {
-    r"[0-9]+" =>? i32::from_str(<>)
-        .map_err(|_| ParseError::User {
-            error: "number is too big"
-        })
-};
-
-Var: &'input str = {
+Name: &'input str = {
     r"[_\p{ID_Start}][_\p{ID_Continue}-]*"
 };

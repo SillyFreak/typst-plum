@@ -1,7 +1,7 @@
 use lalrpop_util::lexer::Token;
 use lalrpop_util::ParseError;
 
-use crate::ast;
+use crate::model;
 
 lalrpop_util::lalrpop_mod!(
     #[allow(clippy::all)] grammar,
@@ -11,47 +11,73 @@ lalrpop_util::lalrpop_mod!(
 pub type Error<'a> = ParseError<usize, Token<'a>, &'static str>;
 pub type Result<'a, T> = std::result::Result<T, Error<'a>>;
 
-pub fn parse(source: &str) -> Result<ast::Expr<'_>> {
-    let parser = grammar::ExprParser::new();
+pub fn parse(source: &str) -> Result<model::Diagram<'_>> {
+    let parser = grammar::DiagramParser::new();
     parser.parse(source)
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::model::*;
+
     use super::*;
 
-    pub fn test_parse(input: &str, expected: &str) {
+    pub fn test_parse(input: &str, expected: &Diagram<'_>) {
         let actual = parse(input).unwrap();
-        assert_eq!(format!("{actual:?}"), expected);
+        assert_eq!(&actual, expected);
     }
 
     #[test]
-    fn test_parse_number() {
-        test_parse(" 0", "0");
-        test_parse(" 2 ", "2");
-        test_parse("11 ", "11");
-        test_parse("(12 )", "12");
-    }
-
-    #[test]
-    fn test_parse_variable() {
-        test_parse(" x", "x");
-        test_parse("_y", "_y");
-        test_parse("foo ", "foo");
-        test_parse(" a-b ", "a-b");
-    }
-
-    #[test]
-    fn test_parse_binary() {
-        test_parse("( 0 + 2)", "(0 + 2)");
-        test_parse(" (2 ) - x", "(2 - x)");
-        test_parse("(11 / (2))", "(11 / 2)");
-        test_parse("x*y", "(x * y)");
-    }
-
-    #[test]
-    fn test_parse_nested() {
-        test_parse("1+1*3", "(1 + (1 * 3))");
-        test_parse("(2+1)* x", "((2 + 1) * x)");
+    fn test_parse_diagram() {
+        fn single_class(classifier: Classifier<'_>) -> Diagram<'_> {
+            Diagram {
+                classifiers: vec![classifier]
+            }
+        }
+        test_parse("class A", &single_class(
+            Classifier {
+                is_abstract: false,
+                is_final: false,
+                kind: ClassifierKind::Class,
+                name: "A",
+                stereotypes: vec![],
+            }
+        ));
+        test_parse("abstract class A", &single_class(
+            Classifier {
+                is_abstract: true,
+                is_final: false,
+                kind: ClassifierKind::Class,
+                name: "A",
+                stereotypes: vec![],
+            }
+        ));
+        test_parse("interface A", &single_class(
+            Classifier {
+                is_abstract: true,
+                is_final: false,
+                kind: ClassifierKind::Interface,
+                name: "A",
+                stereotypes: vec![],
+            }
+        ));
+        test_parse("final class A", &single_class(
+            Classifier {
+                is_abstract: false,
+                is_final: true,
+                kind: ClassifierKind::Class,
+                name: "A",
+                stereotypes: vec![],
+            }
+        ));
+        test_parse("exception A", &single_class(
+            Classifier {
+                is_abstract: false,
+                is_final: false,
+                kind: ClassifierKind::Class,
+                name: "A",
+                stereotypes: vec!["exception"],
+            }
+        ));
     }
 }
