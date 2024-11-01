@@ -22,22 +22,7 @@
 
 = Introduction
 
-This is a template for typst packages. It provides the #ref-fn("parse()") and #ref-fn("eval()") functions:
-
-#file-code("lib.typ", {
-  let lib = raw(block: true, lang: "typ", read("/src/lib.typ").trim(at: end))
-  lib = crudo.lines(lib, "14-17,30-")
-  lib
-})
-
-Here they are in action:
-#man-style.show-example(mode: "markup", dir: ttb, scope: scope, ```typ
-$2 * (2 + x) arrow.double.long$ #plum.parse("2 * (2 + x)")
-```)
-
-#man-style.show-example(mode: "markup", dir: ttb, scope: scope, ```typ
-$2 * (2 + x) arrow.double.long^(x=3)$ #plum.eval("2 * (2 + x)", x: 3)
-```)
+ _Plum_ lets you create UML class diagrams in Typst; inspired by but _not_ compatible with PlantUML. It provides the #ref-fn("parse()") unction:
 
 = Module reference
 
