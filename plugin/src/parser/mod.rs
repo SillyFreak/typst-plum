@@ -19,71 +19,20 @@ pub fn parse(source: &str) -> Result<model::Diagram<'_>> {
 
 #[cfg(test)]
 mod tests {
-    use crate::model::*;
-
     use super::*;
 
-    pub fn test_parse(input: &str, expected: &Diagram<'_>) {
+    pub fn test_parse(input: &str, expected: &str) {
         let actual = parse(input).unwrap();
-        assert_eq!(&actual, expected);
+        assert_eq!(format!("{:?}", actual), expected);
     }
 
     #[test]
     fn test_parse_diagram() {
-        fn single_class(classifier: Classifier<'_>) -> Diagram<'_> {
-            Diagram {
-                classifiers: vec![classifier],
-            }
-        }
-        test_parse(
-            "class A",
-            &single_class(Classifier {
-                is_abstract: false,
-                is_final: false,
-                kind: ClassifierKind::Class,
-                name: "A",
-                stereotypes: vec![],
-            }),
-        );
-        test_parse(
-            "abstract class A",
-            &single_class(Classifier {
-                is_abstract: true,
-                is_final: false,
-                kind: ClassifierKind::Class,
-                name: "A",
-                stereotypes: vec![],
-            }),
-        );
-        test_parse(
-            "interface A",
-            &single_class(Classifier {
-                is_abstract: true,
-                is_final: false,
-                kind: ClassifierKind::Interface,
-                name: "A",
-                stereotypes: vec![],
-            }),
-        );
-        test_parse(
-            "final class A",
-            &single_class(Classifier {
-                is_abstract: false,
-                is_final: true,
-                kind: ClassifierKind::Class,
-                name: "A",
-                stereotypes: vec![],
-            }),
-        );
-        test_parse(
-            "exception A",
-            &single_class(Classifier {
-                is_abstract: false,
-                is_final: false,
-                kind: ClassifierKind::Class,
-                name: "A",
-                stereotypes: vec!["exception"],
-            }),
-        );
+        test_parse("class A", "class A");
+        test_parse("abstract class A", "abstract class A");
+        test_parse("interface A", "interface A");
+        test_parse("final class A", "final class A");
+        test_parse("exception A", "«exception» class A");
+        test_parse("annotation A", "«annotation» interface A");
     }
 }

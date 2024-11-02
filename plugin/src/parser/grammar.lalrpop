@@ -27,7 +27,7 @@ ClassifierKind: (ClassifierKind, Option<&'input str>) = {
     "enumeration" => (ClassifierKind::Enumeration, None),
     "interface" => (ClassifierKind::Interface, None),
     "primitive" => (ClassifierKind::Primitive, None),
-    "annotation" => (ClassifierKind::Class, Some(<>)),
+    "annotation" => (ClassifierKind::Interface, Some(<>)),
     "exception" => (ClassifierKind::Class, Some(<>)),
     "struct" => (ClassifierKind::Class, Some(<>)),
 }
