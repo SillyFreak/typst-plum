@@ -1,4 +1,4 @@
-use serde::{Serialize, Deserialize};
+use serde::{Deserialize, Serialize};
 
 /// A [classifier](https://www.uml-diagrams.org/classifier.html).
 /// See [ClassKind] for the supported kinds of classifiers.

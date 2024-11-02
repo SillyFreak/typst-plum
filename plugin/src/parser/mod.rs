@@ -4,7 +4,8 @@ use lalrpop_util::ParseError;
 use crate::model;
 
 lalrpop_util::lalrpop_mod!(
-    #[allow(clippy::all)] grammar,
+    #[allow(clippy::all)]
+    grammar,
     "/parser/grammar.rs"
 );
 
@@ -31,53 +32,58 @@ mod tests {
     fn test_parse_diagram() {
         fn single_class(classifier: Classifier<'_>) -> Diagram<'_> {
             Diagram {
-                classifiers: vec![classifier]
+                classifiers: vec![classifier],
             }
         }
-        test_parse("class A", &single_class(
-            Classifier {
+        test_parse(
+            "class A",
+            &single_class(Classifier {
                 is_abstract: false,
                 is_final: false,
                 kind: ClassifierKind::Class,
                 name: "A",
                 stereotypes: vec![],
-            }
-        ));
-        test_parse("abstract class A", &single_class(
-            Classifier {
+            }),
+        );
+        test_parse(
+            "abstract class A",
+            &single_class(Classifier {
                 is_abstract: true,
                 is_final: false,
                 kind: ClassifierKind::Class,
                 name: "A",
                 stereotypes: vec![],
-            }
-        ));
-        test_parse("interface A", &single_class(
-            Classifier {
+            }),
+        );
+        test_parse(
+            "interface A",
+            &single_class(Classifier {
                 is_abstract: true,
                 is_final: false,
                 kind: ClassifierKind::Interface,
                 name: "A",
                 stereotypes: vec![],
-            }
-        ));
-        test_parse("final class A", &single_class(
-            Classifier {
+            }),
+        );
+        test_parse(
+            "final class A",
+            &single_class(Classifier {
                 is_abstract: false,
                 is_final: true,
                 kind: ClassifierKind::Class,
                 name: "A",
                 stereotypes: vec![],
-            }
-        ));
-        test_parse("exception A", &single_class(
-            Classifier {
+            }),
+        );
+        test_parse(
+            "exception A",
+            &single_class(Classifier {
                 is_abstract: false,
                 is_final: false,
                 kind: ClassifierKind::Class,
                 name: "A",
                 stereotypes: vec!["exception"],
-            }
-        ));
+            }),
+        );
     }
 }
