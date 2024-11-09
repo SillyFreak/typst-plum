@@ -7,7 +7,9 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Clone, PartialEq)]
 #[serde(rename_all = "kebab-case")]
 pub struct Classifier<'input> {
+    #[serde(rename = "abstract")]
     pub is_abstract: bool,
+    #[serde(rename = "final")]
     pub is_final: bool,
     pub kind: ClassifierKind,
     pub name: &'input str,
