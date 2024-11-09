@@ -11,4 +11,9 @@ interface Bar
 
 #diagram
 
-#plum.parse(diagram)
+// #plum.parse(diagram)
+
+#plum.plum(diagram, (
+  Foo: (0, 0),
+  Bar: (1, 0),
+))

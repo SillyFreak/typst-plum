@@ -14,7 +14,10 @@ class Foo
 interface Bar
 ```
 
-#plum.parse(diagram)
+#plum.plum(diagram, (
+  Foo: (0, 0),
+  Bar: (1, 0),
+))
 ````
 
 ![Example](./thumbnail.png)
