@@ -22,7 +22,7 @@
 
 = Introduction
 
- _Plum_ lets you create UML class diagrams in Typst; inspired by but _not_ compatible with PlantUML. It provides the #ref-fn("parse()") unction:
+ _Plum_ lets you create UML class diagrams in Typst; inspired by but _not_ compatible with PlantUML. It provides the #ref-fn("parse()") and #ref-fn("plum()") functions.
 
 = Module reference
 

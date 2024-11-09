@@ -2,6 +2,8 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
+mod helpers;
+
 mod classifier;
 
 pub use classifier::*;
