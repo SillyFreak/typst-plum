@@ -10,14 +10,14 @@ To add this package to your project, use this:
 #import "@preview/plum:0.0.1"
 
 #let diagram = ```
+#[pos(0, 0)]
 class Foo
+
+#[pos(1, 0)]
 interface Bar
 ```
 
-#plum.plum(diagram, (
-  Foo: (0, 0),
-  Bar: (1, 0),
-))
+#plum.plum(diagram)
 ````
 
 ![Example](./thumbnail.png)

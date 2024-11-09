@@ -5,7 +5,10 @@
 #set text(0.85em)
 
 #let diagram = ```
+#[pos(0, 0)]
 class Foo
+
+#[pos(1, 0)]
 interface Bar
 ```
 
@@ -13,7 +16,4 @@ interface Bar
 
 // #plum.parse(diagram)
 
-#plum.plum(diagram, (
-  Foo: (0, 0),
-  Bar: (1, 0),
-))
+#plum.plum(diagram)

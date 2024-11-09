@@ -26,21 +26,17 @@
 /// Parses and processes a diagram.
 ///
 /// #example(mode: "markup", dir: ttb, ````typ
-/// #plum.plum(
-///   ```
+/// #plum.plum(```plum
+///   #[pos(0, 0)]
 ///   interface Bar
+///   #[pos(1, 0)]
 ///   exception Baz
-///   ```, (
-///     Bar: (0, 0),
-///     Baz: (1, 0),
-///   )
-/// )
+/// ```)
 /// ````)
 ///
 /// - diagram (str): the expression to parse
-/// - pos (dict): positions of classes in the diagram
 /// -> dict
-#let plum(diagram, pos) = {
+#let plum(diagram) = {
   import "imports.typ": fletcher
 
   set text(font: ("FreeSans",), size: 0.8em)
@@ -51,8 +47,8 @@
     node-inset: 0pt,
     axes: (ltr, ttb),
     {
-      for (name, ..args) in diagram.classifiers {
-        classifier.classifier(pos.at(name), name, ..args)
+      for (pos, name, ..args) in diagram.classifiers {
+        classifier.classifier(pos, name, ..args)
       }
     }
   )

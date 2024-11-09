@@ -1,6 +1,9 @@
-use crate::model::{Diagram, Classifier, ClassifierKind};
+use std::collections::HashMap;
+use std::str::FromStr;
 
-// use lalrpop_util::ParseError;
+use lalrpop_util::ParseError;
+
+use crate::model::{Diagram, Classifier, ClassifierKind, Meta};
 
 grammar;
 
@@ -11,15 +14,28 @@ pub Diagram: Diagram<'input> = {
 };
 
 Classifier: Classifier<'input> = {
+    <meta: Metas>
     <is_abstract: "abstract"?> <is_final: "final"?> <kind: ClassifierKind> <name: Name> => {
         let (kind, stereotype) = kind;
         let is_abstract = is_abstract.is_some() || kind == ClassifierKind::Interface;
         let is_final = is_final.is_some();
         let mut stereotypes = Vec::new();
         stereotypes.extend(stereotype);
-        Classifier { is_abstract, is_final, kind, name, stereotypes }
+        Classifier { meta, is_abstract, is_final, kind, name, stereotypes }
     }
 };
+
+Metas: HashMap<&'input str, Meta> = {
+    "#[" <mut attrs: (<Meta> ",")*> <attr: (<Meta> ","?)> "]" => {
+        attrs.push(attr);
+        HashMap::from_iter(attrs.into_iter().map(|attr| (attr.name(), attr)))
+    },
+    => HashMap::new(),
+}
+
+Meta: Meta = {
+    "pos" "(" <Num> "," <Num> ")" => Meta::Position(<>),
+}
 
 ClassifierKind: (ClassifierKind, Option<&'input str>) = {
     "class" => (ClassifierKind::Class, None),
@@ -32,6 +48,13 @@ ClassifierKind: (ClassifierKind, Option<&'input str>) = {
     "struct" => (ClassifierKind::Class, Some(<>)),
 }
 
+Num: isize = {
+    r"[-+]?\d+" =>? isize::from_str(<>)
+        .map_err(|_| ParseError::User {
+            error: "number is too big"
+        })
+};
+
 Name: &'input str = {
     r"[_\p{ID_Start}][_\p{ID_Continue}-]*"
-};
+}

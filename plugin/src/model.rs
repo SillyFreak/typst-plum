@@ -27,3 +27,18 @@ impl fmt::Debug for Diagram<'_> {
         Ok(())
     }
 }
+
+#[derive(Serialize, Deserialize, Clone, PartialEq)]
+// #[serde(bound(deserialize = "'de: 'input"))]
+#[serde(untagged)]
+pub enum Meta {
+    Position(isize, isize),
+}
+
+impl Meta {
+    pub fn name(&self) -> &'static str {
+        match self {
+            Self::Position(_, _) => "pos",
+        }
+    }
+}

@@ -1,14 +1,17 @@
 use std::fmt;
+use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use super::helpers;
+use super::{helpers, Meta};
 
 /// A [classifier](https://www.uml-diagrams.org/classifier.html).
 /// See [ClassKind] for the supported kinds of classifiers.
 #[derive(Serialize, Deserialize, Clone, PartialEq)]
 #[serde(rename_all = "kebab-case")]
 pub struct Classifier<'input> {
+    #[serde(flatten)]
+    pub meta: HashMap<&'input str, Meta>,
     #[serde(rename = "abstract", skip_serializing_if = "helpers::is_false")]
     pub is_abstract: bool,
     #[serde(rename = "final", skip_serializing_if = "helpers::is_false")]
