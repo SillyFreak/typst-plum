@@ -1,5 +1,6 @@
 use std::fmt;
 
+use either::Either;
 use serde::{Deserialize, Serialize};
 
 mod helpers;
@@ -19,10 +20,12 @@ pub struct Diagram<'input> {
 
 impl fmt::Display for Diagram<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let mut classifiers = self.classifiers.iter();
-        if let Some(x) = classifiers.next() {
+        let classifiers = self.classifiers.iter().map(Either::Left);
+        let edges = self.edges.iter().map(Either::Right);
+        let mut items = classifiers.chain(edges);
+        if let Some(x) = items.next() {
             write!(f, "{}", x)?;
-            for x in classifiers {
+            for x in items {
                 write!(f, "\n{}", x)?;
             }
         }

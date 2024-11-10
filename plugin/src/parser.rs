@@ -66,4 +66,9 @@ mod tests {
             "class A {\n  - attr\n  + attr2\n}",
         );
     }
+
+    #[test]
+    fn test_parse_edges() {
+        test_parse("A  -- B", "A -- B");
+    }
 }
