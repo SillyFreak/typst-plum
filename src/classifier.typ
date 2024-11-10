@@ -1,22 +1,22 @@
 #let classifier(
-	name,
+  name,
   pos: auto,
-	label: auto,
-	abstract: auto,
-	final: false,
+  label: auto,
+  abstract: auto,
+  final: false,
   stereotypes: (),
-	kind: "class",
-	attributes: auto,
-	operations: (),
-	..args
+  kind: "class",
+  attributes: auto,
+  operations: (),
+  ..args
 ) = {
   import "imports.typ": fletcher.node
 
   assert.ne(pos, auto, message: "automatic positioning is currently not supported. add #[pos(x, y)] to each classifier")
 
-	if label == auto { label = std.label(name) }
-	if abstract == auto { abstract = kind == "interface" }
-	if attributes == auto {
+  if label == auto { label = std.label(name) }
+  if abstract == auto { abstract = kind == "interface" }
+  if attributes == auto {
     attributes = if kind == "interface" { none } else { () }
   }
 
@@ -35,7 +35,7 @@
     name
   }
   let attributes = if attributes != none {
-		set align(start)
+    set align(start)
     if attributes.len() > 0 {
       attributes.join(linebreak())
     } else {
@@ -43,7 +43,7 @@
     }
   }
   let operations = if operations != none {
-		set align(start)
+    set align(start)
     if operations.len() > 0 {
       operations.join(linebreak())
     } else {
@@ -63,5 +63,5 @@
     )
   }
 
-	node(pos, body, name: label, shape: "rect", ..args)
+  node(pos, body, name: label, shape: "rect", ..args)
 }
