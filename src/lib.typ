@@ -47,8 +47,8 @@
     node-inset: 0pt,
     axes: (ltr, ttb),
     {
-      for (pos, name, ..args) in diagram.classifiers {
-        classifier.classifier(pos, name, ..args)
+      for (name, ..args) in diagram.classifiers {
+        classifier.classifier(name, ..args)
       }
     }
   )

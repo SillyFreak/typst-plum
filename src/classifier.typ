@@ -1,6 +1,6 @@
 #let classifier(
-  pos,
 	name,
+  pos: auto,
 	label: auto,
 	abstract: auto,
 	final: false,
@@ -11,6 +11,8 @@
 	..args
 ) = {
   import "imports.typ": fletcher.node
+
+  assert.ne(pos, auto, message: "automatic positioning is currently not supported. add #[pos(x, y)] to each classifier")
 
 	if label == auto { label = std.label(name) }
 	if abstract == auto { abstract = kind == "interface" }
