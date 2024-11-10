@@ -3,27 +3,49 @@ use std::str::FromStr;
 
 use lalrpop_util::ParseError;
 
-use crate::model::{Diagram, Classifier, ClassifierKind, Meta};
+use crate::model::*;
 
 grammar;
 
 pub Diagram: Diagram<'input> = {
-    <classifiers: Classifier*> => {
+    "\n"* <mut classifiers: (<Classifier> "\n"+)*> <classifier: Classifier?> => {
+        classifiers.extend(classifier);
         Diagram { classifiers }
     }
 };
 
 Classifier: Classifier<'input> = {
     <meta: Metas>
-    <is_abstract: "abstract"?> <is_final: "final"?> <kind: ClassifierKind> <name: Name> => {
+    <is_abstract: "abstract"?> <is_final: "final"?> <kind: ClassifierKind> <name: Name> <body: ClassifierBody> => {
         let (kind, stereotype) = kind;
         let is_abstract = is_abstract.is_some() || kind == ClassifierKind::Interface;
         let is_final = is_final.is_some();
         let mut stereotypes = Vec::new();
         stereotypes.extend(stereotype);
-        Classifier { meta, is_abstract, is_final, kind, name, stereotypes }
+        let attributes = body;
+        Classifier { meta, is_abstract, is_final, kind, name, stereotypes, attributes }
     }
-};
+}
+
+ClassifierBody: Vec<Attribute<'input>> = {
+    => Vec::new(),
+    "{" "\n"* "}" => Vec::new(),
+    "{" "\n"+ <attrs: (<Attribute> "\n"+)+> "}" => attrs,
+}
+
+Attribute: Attribute<'input> = {
+    <visibility: Visibility?> <name: Name> => {
+        let r#type = None;
+        Attribute { visibility, name, r#type }
+    }
+}
+
+Visibility: Visibility = {
+    "-" => Visibility::Private,
+    "~" => Visibility::Package,
+    "#" => Visibility::Protected,
+    "+" => Visibility::Public,
+}
 
 Metas: HashMap<&'input str, Meta> = {
     "#[" <mut attrs: (<Meta> ",")*> <attr: (<Meta> ","?)> "]" => {
@@ -53,8 +75,14 @@ Num: isize = {
         .map_err(|_| ParseError::User {
             error: "number is too big"
         })
-};
+}
 
 Name: &'input str = {
     r"[_\p{ID_Start}][_\p{ID_Continue}-]*"
+}
+
+match {
+    // don't allow random newlines
+    r"[\s&&[^\r\n]]*" => { },
+    _
 }

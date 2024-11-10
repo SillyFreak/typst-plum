@@ -5,6 +5,10 @@ use serde::{Deserialize, Serialize};
 
 use super::{helpers, Meta};
 
+mod attribute;
+
+pub use attribute::Attribute;
+
 /// A [classifier](https://www.uml-diagrams.org/classifier.html).
 /// See [ClassKind] for the supported kinds of classifiers.
 #[derive(Serialize, Deserialize, Clone, PartialEq)]
@@ -20,6 +24,8 @@ pub struct Classifier<'input> {
     pub name: &'input str,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub stereotypes: Vec<&'input str>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub attributes: Vec<Attribute<'input>>,
 }
 
 impl fmt::Debug for Classifier<'_> {

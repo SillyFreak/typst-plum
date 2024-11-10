@@ -42,3 +42,15 @@ impl Meta {
         }
     }
 }
+
+#[derive(Serialize, Deserialize, Clone, PartialEq)]
+pub enum Visibility {
+    #[serde(rename = "-")]
+    Private,
+    #[serde(rename = "~")]
+    Package,
+    #[serde(rename = "#")]
+    Protected,
+    #[serde(rename = "+")]
+    Public,
+}

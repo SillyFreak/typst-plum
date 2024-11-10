@@ -35,4 +35,23 @@ mod tests {
         test_parse("exception A", "«exception» class A");
         test_parse("annotation A", "«annotation» interface A");
     }
+
+    #[test]
+    fn test_parse_class_body() {
+        test_parse("class A", "class A");
+        test_parse("class A{}", "class A");
+        test_parse("class A {}", "class A");
+        test_parse("class A { }", "class A");
+        test_parse("class A {\n}", "class A");
+        test_parse("class A {\n\n}", "class A");
+        test_parse(r#"
+            class A {
+                - attr
+            }"#, "class A");
+        test_parse(r#"
+            class A {
+                - attr
+                + attr2
+            }"#, "class A");
+    }
 }
