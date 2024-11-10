@@ -6,7 +6,7 @@
 
 #let diagram = ```
 #[pos(0, 0)]
-class Foo {
+class Foo as X {
   - attr
   attr2
 }

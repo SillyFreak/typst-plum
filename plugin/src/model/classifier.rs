@@ -22,6 +22,8 @@ pub struct Classifier<'input> {
     pub is_final: bool,
     pub kind: ClassifierKind,
     pub name: &'input str,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub id: Option<&'input str>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub stereotypes: Vec<&'input str>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
@@ -66,6 +68,9 @@ impl fmt::Debug for Classifier<'_> {
             write!(f, "» ")?;
         }
         write!(f, "{} {}", self.kind, self.name)?;
+        if let Some(id) = self.id {
+            write!(f, " as {}", id)?;
+        }
 
         if !self.attributes.is_empty() {
             write!(f, " {{")?;

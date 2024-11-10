@@ -16,14 +16,14 @@ pub Diagram: Diagram<'input> = {
 
 Classifier: Classifier<'input> = {
     <meta: Metas>
-    <is_abstract: "abstract"?> <is_final: "final"?> <kind: ClassifierKind> <name: Name> <body: ClassifierBody> => {
+    <is_abstract: "abstract"?> <is_final: "final"?> <kind: ClassifierKind> <name: Name> <id: ("as" <Name>)?> <body: ClassifierBody> => {
         let (kind, stereotype) = kind;
         let is_abstract = is_abstract.is_some() || kind == ClassifierKind::Interface;
         let is_final = is_final.is_some();
         let mut stereotypes = Vec::new();
         stereotypes.extend(stereotype);
         let attributes = body;
-        Classifier { meta, is_abstract, is_final, kind, name, stereotypes, attributes }
+        Classifier { meta, is_abstract, is_final, kind, name, id, stereotypes, attributes }
     }
 }
 

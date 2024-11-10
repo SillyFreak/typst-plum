@@ -1,7 +1,7 @@
 #let classifier(
   name,
   pos: auto,
-  label: auto,
+  id: auto,
   abstract: auto,
   final: false,
   stereotypes: (),
@@ -14,7 +14,8 @@
 
   assert.ne(pos, auto, message: "automatic positioning is currently not supported. add #[pos(x, y)] to each classifier")
 
-  if label == auto { label = std.label(name) }
+  if id == auto { id = name }
+  if type(id) == str { id = label(id) }
   if abstract == auto { abstract = kind == "interface" }
   if attributes == auto {
     attributes = if kind == "interface" { none } else { () }
@@ -67,5 +68,5 @@
     )
   }
 
-  node(pos, body, name: label, shape: "rect", ..args)
+  node(pos, body, name: id, shape: "rect", ..args)
 }
