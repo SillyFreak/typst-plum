@@ -70,5 +70,12 @@ mod tests {
     #[test]
     fn test_parse_edges() {
         test_parse("A  -- B", "A -- B");
+        test_parse("A  --> B", "A --> B");
+        test_parse("A  <-- B", "A <-- B");
+        test_parse("A  o--x B", "A o--x B");
+        test_parse("A  *-x--> B", "A *-x--> B");
+        test_parse("A  --|> B", "A --|> B");
+        test_parse("A  <|.. B", "A <|.. B");
+        test_parse("A  <.. B", "A <.. B");
     }
 }

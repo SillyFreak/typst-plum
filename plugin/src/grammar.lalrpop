@@ -55,14 +55,43 @@ Attribute: Attribute<'input> = {
 }
 
 Edge: Edge<'input> = {
-    <a: Name> "--" <b: Name> => {
-        let kind = EdgeKind::Association {
-            name: None,
-            a: AssociationEnd::default(),
-            b: AssociationEnd::default(),
+    <a: Name> <kind: EdgeKind> <b: Name> => Edge { a, b, kind }
+}
+
+EdgeKind: EdgeKind<'input> = {
+    "..|>" => EdgeKind::Realization { direction: Direction::AToB },
+    "<|.." => EdgeKind::Realization { direction: Direction::BToA },
+    "--|>" => EdgeKind::Generalization { direction: Direction::AToB },
+    "<|--" => EdgeKind::Generalization { direction: Direction::BToA },
+    "..>" => EdgeKind::Dependency { direction: Direction::AToB, name: None },
+    "<.." => EdgeKind::Dependency { direction: Direction::BToA, name: None },
+    r"([<x]|[o*]?(-x)?)--((x-)?[o*]?|[x>])" => {
+        fn from_mark(mark: &str) -> AssociationEnd {
+            let mut end = AssociationEnd::default();
+            if mark.contains("<") || mark.contains(">") {
+                end.navigable = Some(true);
+            } else {
+                if mark.contains("x") {
+                    end.navigable = Some(false);
+                }
+                if mark.contains("o") {
+                    end.aggregation = Some(Aggregation::Aggregate);
+                } else if mark.contains("*") {
+                    end.aggregation = Some(Aggregation::Composite);
+                }
+            }
+            end
+        }
+
+        let (a, b) = {
+            let mut iter = <>.split("--");
+            let a = iter.next().unwrap();
+            let b = iter.next().unwrap();
+            assert!(iter.next().is_none());
+            (from_mark(a), from_mark(b))
         };
-        Edge { a, b, kind }
-    }
+        EdgeKind::Association { name: None, a, b }
+    },
 }
 
 Visibility: Visibility = {
@@ -109,5 +138,8 @@ Name: &'input str = {
 match {
     // don't allow random newlines
     r"[\s&&[^\r\n]]*" => { },
+    r"([<x]|[o*]?(-x)?)--((x-)?[o*]?|[x>])",
+} else {
+    r"[_\p{ID_Start}][_\p{ID_Continue}-]*",
     _
 }
