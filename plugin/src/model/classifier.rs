@@ -58,6 +58,14 @@ impl fmt::Debug for Classifier<'_> {
         }
         write!(f, "{} {}", self.kind, self.name)?;
 
+        if !self.attributes.is_empty() {
+            write!(f, " {{")?;
+            for attr in &self.attributes {
+                write!(f, "\n  {:?}", attr)?;
+            }
+            write!(f, "\n}}")?;
+        }
+
         Ok(())
     }
 }

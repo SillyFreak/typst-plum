@@ -1,3 +1,5 @@
+use std::fmt;
+
 use serde::{Deserialize, Serialize};
 
 use crate::model::Visibility;
@@ -10,4 +12,17 @@ pub struct Attribute<'input> {
     pub name: &'input str,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub r#type: Option<&'input str>,
+}
+
+impl fmt::Debug for Attribute<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if let Some(visibility) = self.visibility {
+            write!(f, "{} ", visibility)?;
+        }
+        write!(f, "{}", self.name)?;
+        if let Some(r#type) = self.r#type {
+            write!(f, ": {}", r#type)?;
+        }
+        Ok(())
+    }
 }

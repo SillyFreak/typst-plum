@@ -43,7 +43,7 @@ impl Meta {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq)]
 pub enum Visibility {
     #[serde(rename = "-")]
     Private,
@@ -53,4 +53,15 @@ pub enum Visibility {
     Protected,
     #[serde(rename = "+")]
     Public,
+}
+
+impl fmt::Display for Visibility {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match *self {
+            Self::Private => write!(f, "-"),
+            Self::Package => write!(f, "~"),
+            Self::Protected => write!(f, "#"),
+            Self::Public => write!(f, "+"),
+        }
+    }
 }

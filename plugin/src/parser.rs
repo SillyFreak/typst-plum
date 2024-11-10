@@ -34,6 +34,8 @@ mod tests {
         test_parse("final class A", "final class A");
         test_parse("exception A", "«exception» class A");
         test_parse("annotation A", "«annotation» interface A");
+
+        test_parse("class A\n\nclass B", "class A\nclass B");
     }
 
     #[test]
@@ -47,11 +49,11 @@ mod tests {
         test_parse(r#"
             class A {
                 - attr
-            }"#, "class A");
+            }"#, "class A {\n  - attr\n}");
         test_parse(r#"
             class A {
                 - attr
                 + attr2
-            }"#, "class A");
+            }"#, "class A {\n  - attr\n  + attr2\n}");
     }
 }
