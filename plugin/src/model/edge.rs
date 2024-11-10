@@ -5,7 +5,6 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(
     bound(deserialize = "'de: 'input"),
-    tag = "type",
     rename_all = "kebab-case"
 )]
 pub struct Edge<'input> {
@@ -36,9 +35,11 @@ pub enum EdgeKind<'input> {
     },
     Dependency {
         direction: Direction,
+        #[serde(skip_serializing_if = "Option::is_none")]
         name: Option<&'input str>,
     },
     Association {
+        #[serde(skip_serializing_if = "Option::is_none")]
         name: Option<&'input str>,
         a: AssociationEnd<'input>,
         b: AssociationEnd<'input>,
@@ -79,9 +80,13 @@ pub enum Direction {
 #[derive(Serialize, Deserialize, Default, Debug, Clone, PartialEq)]
 #[serde(rename_all = "kebab-case")]
 pub struct AssociationEnd<'input> {
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub aggregation: Option<Aggregation>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub navigable: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub role: Option<&'input str>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub multiplicity: Option<&'input str>,
 }
 

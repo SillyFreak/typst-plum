@@ -1,4 +1,5 @@
 #import "classifier.typ"
+#import "edge.typ" as edge: MARKS, add-marks
 
 #let _p = plugin("parser.wasm")
 
@@ -49,6 +50,9 @@
     {
       for (name, ..args) in diagram.classifiers {
         classifier.classifier(name, ..args)
+      }
+      for (a, b, kind, ..args) in diagram.edges {
+        edge.edge(a, b, kind, ..args)
       }
     }
   )
