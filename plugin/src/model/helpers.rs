@@ -1,1 +1,3 @@
-pub fn is_false(value: &bool) -> bool { !value }
+pub fn is_false(value: &bool) -> bool {
+    !value
+}
