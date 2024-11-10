@@ -5,14 +5,16 @@ use serde::{Deserialize, Serialize};
 mod helpers;
 
 mod classifier;
+mod edge;
 
 pub use classifier::*;
+pub use edge::*;
 
 #[derive(Serialize, Deserialize, Clone, PartialEq)]
 #[serde(bound(deserialize = "'de: 'input"))]
 pub struct Diagram<'input> {
     pub classifiers: Vec<Classifier<'input>>,
-    // pub links: Vec<Link<'input>>,
+    pub edges: Vec<Edge<'input>>,
 }
 
 impl fmt::Debug for Diagram<'_> {

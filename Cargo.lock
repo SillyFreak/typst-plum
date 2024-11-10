@@ -314,6 +314,7 @@ name = "parser"
 version = "0.1.0"
 dependencies = [
  "ciborium",
+ "either",
  "lalrpop",
  "lalrpop-util",
  "serde",

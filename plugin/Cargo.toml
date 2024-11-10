@@ -8,6 +8,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 ciborium = "0.2.2"
+either = "1.13.0"
 lalrpop-util = { version = "0.22.0", features = ["lexer"] }
 serde = { version = "1.0.213", features = ["derive"] }
 wasm-minimal-protocol = "0.1.0"

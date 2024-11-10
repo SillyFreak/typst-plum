@@ -1,6 +1,7 @@
 use std::collections::BTreeMap;
 use std::str::FromStr;
 
+use either::Either;
 use lalrpop_util::ParseError;
 
 use crate::model::*;
@@ -8,11 +9,24 @@ use crate::model::*;
 grammar;
 
 pub Diagram: Diagram<'input> = {
-    "\n"* <mut classifiers: (<Classifier> "\n"+)*> <classifier: Classifier?> => {
-        classifiers.extend(classifier);
-        Diagram { classifiers }
+    "\n"* <mut items: (<ClassifierOrEdge> "\n"+)*> <item: ClassifierOrEdge?> => {
+        items.extend(item);
+        let mut classifiers = Vec::new();
+        let mut edges = Vec::new();
+        for item in items {
+            match item {
+                Either::Left(item) => classifiers.push(item),
+                Either::Right(item) => edges.push(item),
+            }
+        }
+        Diagram { classifiers, edges }
     }
-};
+}
+
+ClassifierOrEdge: Either<Classifier<'input>, Edge<'input>> = {
+    Classifier => Either::Left(<>),
+    Edge => Either::Right(<>),
+}
 
 Classifier: Classifier<'input> = {
     <meta: Metas>
@@ -37,6 +51,17 @@ Attribute: Attribute<'input> = {
     <visibility: Visibility?> <name: Name> => {
         let r#type = None;
         Attribute { visibility, name, r#type }
+    }
+}
+
+Edge: Edge<'input> = {
+    <a: Name> "--" <b: Name> => {
+        let kind = EdgeKind::Association {
+            name: None,
+            a: AssociationEnd::default(),
+            b: AssociationEnd::default(),
+        };
+        Edge { a, b, kind }
     }
 }
 
