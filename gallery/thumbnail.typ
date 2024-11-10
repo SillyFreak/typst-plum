@@ -6,10 +6,15 @@
 
 #let diagram = ```
 #[pos(0, 0)]
-class Foo
+class Foo {
+  - attr
+  attr2
+}
 
 #[pos(1, 0)]
-interface Bar
+interface Bar {
+  + attr
+}
 ```
 
 #diagram

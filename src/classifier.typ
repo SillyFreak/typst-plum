@@ -37,7 +37,11 @@
   let attributes = if attributes != none {
     set align(start)
     if attributes.len() > 0 {
-      attributes.join(linebreak())
+      attributes.map(attribute => {
+        if "visibility" in attribute [#attribute.visibility ]
+        attribute.name
+        if "type" in attribute [: #attribute.type]
+      }).join(linebreak())
     } else {
       v(-4pt)
     }

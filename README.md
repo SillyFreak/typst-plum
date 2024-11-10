@@ -11,10 +11,15 @@ To add this package to your project, use this:
 
 #let diagram = ```
 #[pos(0, 0)]
-class Foo
+class Foo {
+  - attr
+  attr2
+}
 
 #[pos(1, 0)]
-interface Bar
+interface Bar {
+  + attr
+}
 ```
 
 #plum.plum(diagram)
