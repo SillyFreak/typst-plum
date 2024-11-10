@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::fmt;
 
 use serde::{Deserialize, Serialize};
@@ -15,7 +15,7 @@ pub use attribute::Attribute;
 #[serde(rename_all = "kebab-case")]
 pub struct Classifier<'input> {
     #[serde(flatten)]
-    pub meta: HashMap<&'input str, Meta>,
+    pub meta: BTreeMap<&'input str, Meta>,
     #[serde(rename = "abstract", skip_serializing_if = "helpers::is_false")]
     pub is_abstract: bool,
     #[serde(rename = "final", skip_serializing_if = "helpers::is_false")]
@@ -30,6 +30,15 @@ pub struct Classifier<'input> {
 
 impl fmt::Debug for Classifier<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if !self.meta.is_empty() {
+            let mut iter = self.meta.values();
+            write!(f, "#[{:?}", iter.next().unwrap())?;
+            for meta in iter {
+                write!(f, ", {:?}", meta)?;
+            }
+            write!(f, "]\n")?;
+        }
+
         if self.is_abstract && self.kind != ClassifierKind::Interface {
             write!(f, "abstract ")?;
         }

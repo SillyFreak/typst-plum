@@ -43,6 +43,14 @@ impl Meta {
     }
 }
 
+impl fmt::Debug for Meta {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match *self {
+            Self::Position(x, y) => write!(f, "pos({x}, {y})"),
+        }
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Copy, PartialEq)]
 pub enum Visibility {
     #[serde(rename = "-")]

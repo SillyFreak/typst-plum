@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::BTreeMap;
 use std::str::FromStr;
 
 use lalrpop_util::ParseError;
@@ -47,12 +47,12 @@ Visibility: Visibility = {
     "+" => Visibility::Public,
 }
 
-Metas: HashMap<&'input str, Meta> = {
+Metas: BTreeMap<&'input str, Meta> = {
     "#[" <mut attrs: (<Meta> ",")*> <attr: (<Meta> ","?)> "]" => {
         attrs.push(attr);
-        HashMap::from_iter(attrs.into_iter().map(|attr| (attr.name(), attr)))
+        BTreeMap::from_iter(attrs.into_iter().map(|attr| (attr.name(), attr)))
     },
-    => HashMap::new(),
+    => BTreeMap::new(),
 }
 
 Meta: Meta = {

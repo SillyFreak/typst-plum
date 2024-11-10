@@ -36,6 +36,8 @@ mod tests {
         test_parse("annotation A", "«annotation» interface A");
 
         test_parse("class A\n\nclass B", "class A\nclass B");
+
+        test_parse("#[pos(0, 0)] class A", "#[pos(0, 0)]\nclass A");
     }
 
     #[test]
