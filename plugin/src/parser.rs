@@ -50,14 +50,20 @@ mod tests {
         test_parse("class A { }", "class A");
         test_parse("class A {\n}", "class A");
         test_parse("class A {\n\n}", "class A");
-        test_parse(r#"
+        test_parse(
+            r#"
             class A {
                 - attr
-            }"#, "class A {\n  - attr\n}");
-        test_parse(r#"
+            }"#,
+            "class A {\n  - attr\n}",
+        );
+        test_parse(
+            r#"
             class A {
                 - attr
                 + attr2
-            }"#, "class A {\n  - attr\n  + attr2\n}");
+            }"#,
+            "class A {\n  - attr\n  + attr2\n}",
+        );
     }
 }

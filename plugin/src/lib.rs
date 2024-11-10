@@ -23,7 +23,6 @@ impl<T, E: ToString> MapErrToString<T> for Result<T, E> {
     }
 }
 
-
 #[cfg(target_arch = "wasm32")]
 wasm_minimal_protocol::initiate_protocol!();
 
