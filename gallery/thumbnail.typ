@@ -1,4 +1,5 @@
 #import "/src/lib.typ" as plum
+#import "@preview/crudo:0.1.1"
 
 #set document(date: none)
 #set page(width: 10cm, height: auto, margin: 5mm)
@@ -28,8 +29,12 @@ X ..|> Bar
 Bar <--x-o Baz
 ```
 
-#diagram
+#grid(
+  columns: (1fr, 1fr),
+  crudo.lines(diagram, "-10"),
+  crudo.lines(diagram, "12-"),
+)
 
 // #plum.parse(diagram)
 
-#plum.plum(diagram)
+#align(center, plum.plum(diagram))

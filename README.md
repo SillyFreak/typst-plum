@@ -10,8 +10,8 @@ To add this package to your project, use this:
 #import "@preview/plum:0.0.1"
 
 #let diagram = ```
-#[pos(0, 0)]
-class Foo {
+#[pos(0, 1)]
+class Foo as X {
   - attr
   attr2
 }
@@ -20,6 +20,15 @@ class Foo {
 interface Bar {
   + attr
 }
+
+#[pos(2, 1)]
+abstract class Baz {
+  # bars
+}
+
+X ..|> Bar
+// X ..> Bar
+Bar <--x-o Baz
 ```
 
 #plum.plum(diagram)
