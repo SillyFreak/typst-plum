@@ -38,6 +38,8 @@ mod tests {
         test_parse("class A\n\nclass B", "class A\nclass B");
 
         test_parse("#[pos(0, 0)] class A", "#[pos(0, 0)]\nclass A");
+        test_parse("#[pos(0, 0)]\nclass A", "#[pos(0, 0)]\nclass A");
+        test_parse("#[pos(0, 0)]\n\nclass A", "#[pos(0, 0)]\nclass A");
     }
 
     #[test]

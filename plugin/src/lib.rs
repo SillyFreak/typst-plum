@@ -30,6 +30,6 @@ mod tests {
 
     #[test]
     fn test_parse() {
-        parse(&cbor_encode("#[pos(0, 0)] class A").unwrap());
+        parse(&cbor_encode("#[pos(0, 0)]\nclass A").unwrap());
     }
 }
