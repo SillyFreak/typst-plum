@@ -136,8 +136,9 @@ Name: &'input str = {
 }
 
 match {
-    // don't allow random newlines
-    r"[\s&&[^\r\n]]*" => { },
+    r"[\s&&[^\r\n]]*" => { }, // don't allow random newlines
+    r"//[^\n\r]*[\n\r]*" => { }, // Skip `// comments`
+    r"/\*[^*]*\*+(?:[^/*][^*]*\*+)*/" => { },  // Skip `/* comments */`
     r"([<x]|[o*]?(-x)?)--((x-)?[o*]?|[x>])",
 } else {
     r"[_\p{ID_Start}][_\p{ID_Continue}-]*",
