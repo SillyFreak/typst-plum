@@ -6,7 +6,7 @@ use crate::model;
 lalrpop_util::lalrpop_mod!(
     #[allow(clippy::all)]
     grammar,
-    "/parser/grammar.rs"
+    "/grammar.rs"
 );
 
 pub type Error<'a> = ParseError<usize, Token<'a>, &'static str>;
