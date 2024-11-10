@@ -10,27 +10,27 @@ mod edge;
 pub use classifier::*;
 pub use edge::*;
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(bound(deserialize = "'de: 'input"))]
 pub struct Diagram<'input> {
     pub classifiers: Vec<Classifier<'input>>,
     pub edges: Vec<Edge<'input>>,
 }
 
-impl fmt::Debug for Diagram<'_> {
+impl fmt::Display for Diagram<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let mut classifiers = self.classifiers.iter();
         if let Some(x) = classifiers.next() {
-            write!(f, "{:?}", x)?;
+            write!(f, "{}", x)?;
             for x in classifiers {
-                write!(f, "\n{:?}", x)?;
+                write!(f, "\n{}", x)?;
             }
         }
         Ok(())
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 // #[serde(bound(deserialize = "'de: 'input"))]
 #[serde(untagged)]
 pub enum Meta {
@@ -45,7 +45,7 @@ impl Meta {
     }
 }
 
-impl fmt::Debug for Meta {
+impl fmt::Display for Meta {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match *self {
             Self::Position(x, y) => write!(f, "pos({x}, {y})"),

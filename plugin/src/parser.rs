@@ -23,7 +23,7 @@ mod tests {
 
     pub fn test_parse(input: &str, expected: &str) {
         let actual = parse(input).unwrap();
-        assert_eq!(format!("{:?}", actual), expected);
+        assert_eq!(format!("{}", actual), expected);
     }
 
     #[test]

@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::model::Visibility;
 
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "kebab-case")]
 pub struct Attribute<'input> {
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -14,7 +14,7 @@ pub struct Attribute<'input> {
     pub r#type: Option<&'input str>,
 }
 
-impl fmt::Debug for Attribute<'_> {
+impl fmt::Display for Attribute<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         if let Some(visibility) = self.visibility {
             write!(f, "{} ", visibility)?;

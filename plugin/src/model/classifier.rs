@@ -11,7 +11,7 @@ pub use attribute::Attribute;
 
 /// A [classifier](https://www.uml-diagrams.org/classifier.html).
 /// See [ClassKind] for the supported kinds of classifiers.
-#[derive(Serialize, Deserialize, Clone, PartialEq)]
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "kebab-case")]
 pub struct Classifier<'input> {
     #[serde(flatten)]
@@ -30,13 +30,13 @@ pub struct Classifier<'input> {
     pub attributes: Vec<Attribute<'input>>,
 }
 
-impl fmt::Debug for Classifier<'_> {
+impl fmt::Display for Classifier<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        if !self.meta.is_empty() {
-            let mut iter = self.meta.values();
-            write!(f, "#[{:?}", iter.next().unwrap())?;
-            for meta in iter {
-                write!(f, ", {:?}", meta)?;
+        let mut meta = self.meta.values();
+        if let Some(x) = meta.next() {
+            write!(f, "#[{}", x)?;
+            for x in meta {
+                write!(f, ", {}", x)?;
             }
             write!(f, "]\n")?;
         }
@@ -59,7 +59,7 @@ impl fmt::Debug for Classifier<'_> {
         //     }
         //     write!(f, "» ")?;
         // }
-        let mut stereotypes = self.stereotypes.iter().copied();
+        let mut stereotypes = self.stereotypes.iter();
         if let Some(x) = stereotypes.next() {
             write!(f, "«{}", x)?;
             for x in stereotypes {
@@ -75,7 +75,7 @@ impl fmt::Debug for Classifier<'_> {
         if !self.attributes.is_empty() {
             write!(f, " {{")?;
             for attr in &self.attributes {
-                write!(f, "\n  {:?}", attr)?;
+                write!(f, "\n  {}", attr)?;
             }
             write!(f, "\n}}")?;
         }
@@ -88,7 +88,7 @@ impl fmt::Debug for Classifier<'_> {
 /// table C.1 (keywords). There's no keyword for "class", not all keywords are classifier kinds,
 /// and not all classifier kinds are relevant to class diagrams.
 /// As a result the selection here is somewhat opinionated.
-#[derive(Serialize, Deserialize, Clone, Copy, PartialEq)]
+#[derive(Serialize, Deserialize, Clone, Debug, Copy, PartialEq)]
 #[serde(rename_all = "kebab-case", rename_all_fields = "kebab-case")]
 pub enum ClassifierKind {
     Class,
@@ -107,12 +107,6 @@ impl ClassifierKind {
             Self::Interface => "interface",
             Self::Primitive => "primitive",
         }
-    }
-}
-
-impl fmt::Debug for ClassifierKind {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.kind())
     }
 }
 
