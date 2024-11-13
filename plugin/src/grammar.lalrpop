@@ -5,6 +5,7 @@ use either::Either;
 use lalrpop_util::ParseError;
 
 use crate::model::*;
+use super::from_mark;
 
 grammar;
 
@@ -66,23 +67,6 @@ EdgeKind: EdgeKind<'input> = {
     "..>" => EdgeKind::Dependency { direction: Direction::AToB, name: None },
     "<.." => EdgeKind::Dependency { direction: Direction::BToA, name: None },
     r"([<x]|[o*]?(-x)?)--((x-)?[o*]?|[x>])" => {
-        fn from_mark(mark: &str) -> AssociationEnd {
-            let mut end = AssociationEnd::default();
-            if mark.contains("<") || mark.contains(">") {
-                end.navigable = Some(true);
-            } else {
-                if mark.contains("x") {
-                    end.navigable = Some(false);
-                }
-                if mark.contains("o") {
-                    end.aggregation = Some(Aggregation::Aggregate);
-                } else if mark.contains("*") {
-                    end.aggregation = Some(Aggregation::Composite);
-                }
-            }
-            end
-        }
-
         let (a, b) = {
             let mut iter = <>.split("--");
             let a = iter.next().unwrap();

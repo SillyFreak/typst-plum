@@ -17,6 +17,23 @@ pub fn parse(source: &str) -> Result<model::Diagram<'_>> {
     parser.parse(source)
 }
 
+fn from_mark(mark: &str) -> model::AssociationEnd {
+    let mut end = model::AssociationEnd::default();
+    if mark.contains("<") || mark.contains(">") {
+        end.navigable = Some(true);
+    } else {
+        if mark.contains("x") {
+            end.navigable = Some(false);
+        }
+        if mark.contains("o") {
+            end.aggregation = Some(model::Aggregation::Aggregate);
+        } else if mark.contains("*") {
+            end.aggregation = Some(model::Aggregation::Composite);
+        }
+    }
+    end
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
