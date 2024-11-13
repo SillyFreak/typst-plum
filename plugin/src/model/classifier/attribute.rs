@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::fmt;
 
 use serde::{Deserialize, Serialize};
@@ -11,7 +12,7 @@ pub struct Attribute<'input> {
     pub visibility: Option<Visibility>,
     pub name: &'input str,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub r#type: Option<&'input str>,
+    pub r#type: Option<Cow<'input, str>>,
 }
 
 impl fmt::Display for Attribute<'_> {
@@ -20,7 +21,7 @@ impl fmt::Display for Attribute<'_> {
             write!(f, "{} ", visibility)?;
         }
         write!(f, "{}", self.name)?;
-        if let Some(r#type) = self.r#type {
+        if let Some(r#type) = &self.r#type {
             write!(f, ": {}", r#type)?;
         }
         Ok(())

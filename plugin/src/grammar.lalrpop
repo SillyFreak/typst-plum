@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::str::FromStr;
 
@@ -5,7 +6,7 @@ use either::Either;
 use lalrpop_util::ParseError;
 
 use crate::model::*;
-use super::from_mark;
+use super::{from_mark, parse_string};
 
 grammar;
 
@@ -49,8 +50,7 @@ ClassifierBody: Vec<Attribute<'input>> = {
 }
 
 Attribute: Attribute<'input> = {
-    <visibility: Visibility?> <name: Name> => {
-        let r#type = None;
+    <visibility: Visibility?> <name: Name> <r#type: (":" <NameOrString>)?> => {
         Attribute { visibility, name, r#type }
     }
 }
@@ -108,6 +108,15 @@ ClassifierKind: (ClassifierKind, Option<&'input str>) = {
     "struct" => (ClassifierKind::Class, Some(<>)),
 }
 
+NameOrString: Cow<'input, str> = {
+    Name => Cow::from(<>),
+    String,
+}
+
+Name: &'input str = {
+    r"[_\p{ID_Start}][_\p{ID_Continue}-]*"
+}
+
 Num: isize = {
     r"[-+]?\d+" =>? isize::from_str(<>)
         .map_err(|_| ParseError::User {
@@ -115,8 +124,8 @@ Num: isize = {
         })
 }
 
-Name: &'input str = {
-    r"[_\p{ID_Start}][_\p{ID_Continue}-]*"
+String: Cow<'input, str> = {
+    r#""[^"\\\r\n]*""# => parse_string(<>)
 }
 
 match {

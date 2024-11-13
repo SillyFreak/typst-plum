@@ -1,3 +1,5 @@
+use std::borrow::Cow;
+
 use lalrpop_util::lexer::Token;
 use lalrpop_util::ParseError;
 
@@ -32,6 +34,11 @@ fn from_mark(mark: &str) -> model::AssociationEnd {
         }
     }
     end
+}
+
+fn parse_string(string: &str) -> Cow<'_, str> {
+    // TODO process escape sequences
+    Cow::from(&string[1..string.len() - 1])
 }
 
 #[cfg(test)]
@@ -70,17 +77,17 @@ mod tests {
         test_parse(
             r#"
             class A {
-                - attr
+                - attr: Foo
             }"#,
-            "class A {\n  - attr\n}",
+            "class A {\n  - attr: Foo\n}",
         );
         test_parse(
             r#"
             class A {
                 - attr
-                + attr2
+                + attr2: "Baz<T>"
             }"#,
-            "class A {\n  - attr\n  + attr2\n}",
+            "class A {\n  - attr\n  + attr2: Baz<T>\n}",
         );
     }
 
