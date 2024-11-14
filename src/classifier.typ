@@ -5,9 +5,10 @@
 ) = {
   assert.ne(name, none, message: "name is required")
 
-  if visibility != none [#visibility ]
-  name
-  if type != none [: #type]
+  (visibility, {
+    name
+    if type != none [: #type]
+  })
 }
 
 #let operation(
@@ -28,10 +29,11 @@
 
   assert.ne(name, none, message: "name is required")
 
-  if visibility != none [#visibility ]
-  name
-  [(#parameters.map(p => parameter(..p)).join[, ])]
-  if return-type != none [: #return-type]
+  (visibility, {
+    name
+    [(#parameters.map(p => parameter(..p)).join[, ])]
+    if return-type != none [: #return-type]
+  })
 }
 
 #let classifier(
@@ -72,31 +74,33 @@
     name
   }
   let attributes = if attributes != none {
-    set align(start)
     if attributes.len() > 0 {
-      attributes.map(a => attribute(..a)).join(linebreak())
+      attributes.map(a => attribute(..a)).join()
     } else {
-      v(-4pt)
+      (grid.cell(colspan: 2, v(-1pt)),)
     }
   }
   let operations = if operations != none {
-    set align(start)
     if operations.len() > 0 {
-      operations.map(o => operation(..o)).join(linebreak())
+      operations.map(o => operation(..o)).join()
     } else {
-      v(-4pt)
+      (grid.cell(colspan: 2, v(-1pt)),)
     }
   }
 
   let body = {
-    set grid(inset: (x: 0.4em, y: 0.4em))
     set grid.hline(stroke: 0.5pt)
     show: block.with(stroke: 0.5pt, radius: 2pt)
 
     grid(
-      title,
-      ..if attributes != none {(grid.hline(), attributes)},
-      ..if operations != none {(grid.hline(), operations)},
+      columns: 2,
+      column-gutter: -0.5em,
+      align: (center, start),
+      inset: 0.3em,
+
+      grid.cell(colspan: 2, title),
+      ..if attributes != none {(grid.hline(), ..attributes)},
+      ..if operations != none {(grid.hline(), ..operations)},
     )
   }
 
