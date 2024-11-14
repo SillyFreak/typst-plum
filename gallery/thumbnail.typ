@@ -12,6 +12,7 @@
 class Foo as X {
   - attr
   attr2: X
+  + op()
 }
 
 #[pos(1, 0)]
@@ -19,7 +20,8 @@ interface Bar
 
 #[pos(2, 1)]
 abstract class Baz {
-  # bars: "List<Y>"
+  # bars: "List<Bar>"
+  + op(x: X, y: Y): Z
 }
 
 X ..|> Bar
@@ -29,8 +31,8 @@ Bar <--x-o Baz
 
 #grid(
   columns: (1fr, 1fr),
-  crudo.lines(diagram, "-8"),
-  crudo.lines(diagram, "10-"),
+  crudo.lines(diagram, "-9"),
+  crudo.lines(diagram, "11-"),
 )
 
 // #plum.parse(diagram)

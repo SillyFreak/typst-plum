@@ -50,7 +50,16 @@
   let operations = if operations != none {
     set align(start)
     if operations.len() > 0 {
-      operations.join(linebreak())
+      operations.map(operation => {
+        if "visibility" in operation [#operation.visibility ]
+        operation.name
+        let parameters = operation.parameters.map(parameter => {
+          parameter.name
+          if "type" in parameter [: #parameter.type]
+        }).join[, ]
+        [(#parameters)]
+        if "return-type" in operation [: #operation.return-type]
+      }).join(linebreak())
     } else {
       v(-4pt)
     }
