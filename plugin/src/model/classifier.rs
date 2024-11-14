@@ -6,8 +6,10 @@ use serde::{Deserialize, Serialize};
 use super::{helpers, Meta};
 
 mod attribute;
+mod operation;
 
 pub use attribute::Attribute;
+pub use operation::{Operation, Parameter};
 
 /// A [classifier](https://www.uml-diagrams.org/classifier.html).
 /// See [ClassKind] for the supported kinds of classifiers.
@@ -28,6 +30,8 @@ pub struct Classifier<'input> {
     pub stereotypes: Vec<&'input str>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     pub attributes: Vec<Attribute<'input>>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    pub operations: Vec<Operation<'input>>,
 }
 
 impl fmt::Display for Classifier<'_> {
@@ -72,10 +76,13 @@ impl fmt::Display for Classifier<'_> {
             write!(f, " as {}", id)?;
         }
 
-        if !self.attributes.is_empty() {
+        if !self.attributes.is_empty() || !self.operations.is_empty() {
             write!(f, " {{")?;
             for attr in &self.attributes {
                 write!(f, "\n  {}", attr)?;
+            }
+            for op in &self.operations {
+                write!(f, "\n  {}", op)?;
             }
             write!(f, "\n}}")?;
         }

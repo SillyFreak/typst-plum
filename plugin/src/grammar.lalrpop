@@ -38,15 +38,14 @@ Classifier: Classifier<'input> = {
         let is_final = is_final.is_some();
         let mut stereotypes = Vec::new();
         stereotypes.extend(stereotype);
-        let attributes = body;
-        Classifier { meta, is_abstract, is_final, kind, name, id, stereotypes, attributes }
+        let (attributes, operations) = body;
+        Classifier { meta, is_abstract, is_final, kind, name, id, stereotypes, attributes, operations }
     }
 }
 
-ClassifierBody: Vec<Attribute<'input>> = {
-    => Vec::new(),
-    "{" "\n"* "}" => Vec::new(),
-    "{" "\n"+ <attrs: (<Attribute> "\n"+)+> "}" => attrs,
+ClassifierBody: (Vec<Attribute<'input>>, Vec<Operation<'input>>) = {
+    ("{" "\n"* "}")? => (Vec::new(), Vec::new()),
+    "{" "\n"+ <attrs: (<Attribute> "\n"+)+> "}" => (attrs, Vec::new()),
 }
 
 Attribute: Attribute<'input> = {
