@@ -44,13 +44,36 @@ Classifier: Classifier<'input> = {
 }
 
 ClassifierBody: (Vec<Attribute<'input>>, Vec<Operation<'input>>) = {
-    ("{" "\n"* "}")? => (Vec::new(), Vec::new()),
-    "{" "\n"+ <attrs: (<Attribute> "\n"+)+> "}" => (attrs, Vec::new()),
+    ("{" "}")? => (Vec::new(), Vec::new()),
+    "{" "\n"+
+        <attrs: (<Attribute> "\n"+)*>
+        <ops: (<Operation> "\n"+)*>
+    "}" => (attrs, ops),
 }
 
 Attribute: Attribute<'input> = {
     <visibility: Visibility?> <name: Name> <r#type: (":" <NameOrString>)?> => {
         Attribute { visibility, name, r#type }
+    }
+}
+
+Operation: Operation<'input> = {
+    <visibility: Visibility?> <name: Name> "(" <parameters: Parameters> ")" <return_type: (":" <NameOrString>)?> => {
+        Operation { visibility, name, parameters, return_type }
+    }
+}
+
+Parameters: Vec<Parameter<'input>> = {
+    => Vec::new(),
+    <mut parameters: (<Parameter> ",")*> <parameter: (<Parameter> ","?)> => {
+        parameters.push(parameter);
+        parameters
+    },
+}
+
+Parameter: Parameter<'input> = {
+    <name: Name> <r#type: (":" <NameOrString>)?> => {
+        Parameter { name, r#type }
     }
 }
 

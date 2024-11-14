@@ -76,18 +76,21 @@ mod tests {
         test_parse("class A {\n\n}", "class A");
         test_parse(
             r#"
-            class A {
-                - attr: Foo
+            class  A  {
+                 - attr:  Foo
+                + op ( ) :  Bar
             }"#,
-            "class A {\n  - attr: Foo\n}",
+            "class A {\n  - attr: Foo\n  + op(): Bar\n}",
         );
         test_parse(
             r#"
             class A {
                 - attr
-                + attr2: "Baz<T>"
+                +   attr2: "Baz<T>"
+                + op( x, )
+                + op(x:  X , y: Y): Z
             }"#,
-            "class A {\n  - attr\n  + attr2: Baz<T>\n}",
+            "class A {\n  - attr\n  + attr2: Baz<T>\n  + op(x)\n  + op(x: X, y: Y): Z\n}",
         );
     }
 
