@@ -1,3 +1,39 @@
+#let attribute(
+  visibility: none,
+  name: none,
+  type: none,
+) = {
+  assert.ne(name, none, message: "name is required")
+
+  if visibility != none [#visibility ]
+  name
+  if type != none [: #type]
+}
+
+#let operation(
+  visibility: none,
+  name: none,
+  parameters: (),
+  return-type: none,
+) = {
+  let parameter(
+    name: none,
+    type: none,
+  ) = {
+    assert.ne(name, none, message: "name is required")
+
+    name
+    if type != none [: #type]
+  }
+
+  assert.ne(name, none, message: "name is required")
+
+  if visibility != none [#visibility ]
+  name
+  [(#parameters.map(p => parameter(..p)).join[, ])]
+  if return-type != none [: #return-type]
+}
+
 #let classifier(
   name,
   pos: auto,
@@ -38,11 +74,7 @@
   let attributes = if attributes != none {
     set align(start)
     if attributes.len() > 0 {
-      attributes.map(attribute => {
-        if "visibility" in attribute [#attribute.visibility ]
-        attribute.name
-        if "type" in attribute [: #attribute.type]
-      }).join(linebreak())
+      attributes.map(a => attribute(..a)).join(linebreak())
     } else {
       v(-4pt)
     }
@@ -50,16 +82,7 @@
   let operations = if operations != none {
     set align(start)
     if operations.len() > 0 {
-      operations.map(operation => {
-        if "visibility" in operation [#operation.visibility ]
-        operation.name
-        let parameters = operation.parameters.map(parameter => {
-          parameter.name
-          if "type" in parameter [: #parameter.type]
-        }).join[, ]
-        [(#parameters)]
-        if "return-type" in operation [: #operation.return-type]
-      }).join(linebreak())
+      operations.map(o => operation(..o)).join(linebreak())
     } else {
       v(-4pt)
     }
