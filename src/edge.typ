@@ -100,6 +100,8 @@
   a,
   b,
   kind,
+  via: (),
+  ..args
 ) = {
   import "imports.typ": fletcher.edge
 
@@ -149,7 +151,7 @@
     opts.marks += marks(b, "b")
   }
 
-  edge(a, b, ..opts)
+  edge(a, ..via, b, ..opts, ..args)
 }
 
   // uml-edge(<subj>, <conc-subj>, "generalize-")

@@ -26,8 +26,9 @@ abstract class Baz {
   # bars
 }
 
+#[via((0, 0))]
 X ..|> Bar
-// X ..> Bar
+#[via((1, 1), (2, 0))]
 Bar <--x-o Baz
 ```
 
