@@ -101,6 +101,7 @@
   b,
   kind,
   via: (),
+  bend: none,
   ..args
 ) = {
   import "imports.typ": fletcher.edge
@@ -149,6 +150,10 @@
 
     opts.marks += marks(a, "a").rev()
     opts.marks += marks(b, "b")
+  }
+
+  if bend != none {
+    opts.bend = bend * 1rad
   }
 
   edge(a, ..via, b, ..opts, ..args)

@@ -24,7 +24,7 @@ abstract class Baz {
   + op(x: X, y: Y): Z
 }
 
-#[via((0, 0))]
+#[bend(45deg)]
 X ..|> Bar
 #[via((1, 0.4), (2, 0.4))]
 Bar <--x-o Baz

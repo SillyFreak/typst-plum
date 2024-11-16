@@ -1,4 +1,5 @@
 use std::borrow::Cow;
+use std::f32::consts::PI;
 use std::str::FromStr;
 
 use lalrpop_util::lexer::Token;
@@ -46,6 +47,17 @@ fn parse_f32(number: &str) -> Result<'_, f32> {
         num if num.is_finite() => Ok(num),
         _ => Err(ParseError::User { error: "number is too big" }),
     }
+}
+
+fn parse_angle(angle: &str) -> Result<'_, f32> {
+    let (number, unit) = angle.split_at(angle.len() - 3);
+    let number = parse_f32(number)?;
+    let factor = match unit {
+        "rad" => 1.0,
+        "deg" => PI / 180.0,
+        _ => panic!("angular unit should have been 'rad' or 'deg'"),
+    };
+    Ok(number * factor)
 }
 
 fn parse_string(string: &str) -> Cow<'_, str> {
@@ -119,5 +131,7 @@ mod tests {
 
         test_parse("#[via((0, 0))] A  -- B", "#[via((0, 0))]\nA -- B");
         test_parse("#[via((0, 0), (1, 0))] A  -- B", "#[via((0, 0), (1, 0))]\nA -- B");
+        test_parse("#[bend(-15deg)] A  -- B", "#[bend(-15deg)]\nA -- B");
+        test_parse("#[via((0, 0)), bend(0.3rad)] A  -- B", "#[bend(17.188734deg), via((0, 0))]\nA -- B");
     }
 }

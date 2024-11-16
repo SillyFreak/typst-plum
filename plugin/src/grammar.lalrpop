@@ -4,7 +4,7 @@ use std::collections::BTreeMap;
 use either::Either;
 
 use crate::model::*;
-use super::{from_mark, parse_isize, parse_f32, parse_string};
+use super::{from_mark, parse_isize, parse_f32, parse_angle, parse_string};
 
 grammar;
 
@@ -120,6 +120,7 @@ Meta: Meta = {
         points.push(point);
         Meta::Via(points)
     },
+    "bend" "(" <Angle> ")" => Meta::Bend(<>),
 }
 
 ClassifierKind: (ClassifierKind, Option<&'input str>) = {
@@ -149,6 +150,10 @@ Int: isize = {
 Float: f32 = {
     r"[-+]?\d+" =>? parse_f32(<>),
     r"[-+]?\d+\.\d+" =>? parse_f32(<>),
+}
+
+Angle: f32 = {
+    r"[-+]?\d+(\.\d+)?(rad|deg)" =>? parse_angle(<>),
 }
 
 String: Cow<'input, str> = {

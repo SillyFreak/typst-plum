@@ -1,3 +1,4 @@
+use std::f32::consts::PI;
 use std::fmt;
 
 use either::Either;
@@ -39,6 +40,7 @@ impl fmt::Display for Diagram<'_> {
 pub enum Meta {
     Position(f32, f32),
     Via(Vec<(f32, f32)>),
+    Bend(f32),
 }
 
 impl Meta {
@@ -46,6 +48,7 @@ impl Meta {
         match self {
             Self::Position(_, _) => "pos",
             Self::Via(_) => "via",
+            Self::Bend(_) => "bend",
         }
     }
 }
@@ -63,6 +66,9 @@ impl fmt::Display for Meta {
                         write!(f, ", ({x}, {y})")?;
                     }
                 }
+            },
+            Self::Bend(angle) => {
+                write!(f, "{}deg", angle * 180.0 / PI)?;
             },
         }
         write!(f, ")")?;
