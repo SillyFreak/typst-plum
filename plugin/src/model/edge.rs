@@ -1,6 +1,9 @@
+use std::collections::BTreeMap;
 use std::fmt;
 
 use serde::{Deserialize, Serialize};
+
+use super::Meta;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(
@@ -8,6 +11,8 @@ use serde::{Deserialize, Serialize};
     rename_all = "kebab-case"
 )]
 pub struct Edge<'input> {
+    #[serde(flatten)]
+    pub meta: BTreeMap<&'input str, Meta>,
     pub a: &'input str,
     pub b: &'input str,
     pub kind: EdgeKind<'input>,
@@ -15,6 +20,15 @@ pub struct Edge<'input> {
 
 impl fmt::Display for Edge<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let mut meta = self.meta.values();
+        if let Some(x) = meta.next() {
+            write!(f, "#[{}", x)?;
+            for x in meta {
+                write!(f, ", {}", x)?;
+            }
+            write!(f, "]\n")?;
+        }
+
         write!(f, "{} {} {}", self.a, self.kind, self.b)
     }
 }

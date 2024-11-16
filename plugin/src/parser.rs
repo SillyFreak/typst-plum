@@ -104,5 +104,8 @@ mod tests {
         test_parse("A  --|> B", "A --|> B");
         test_parse("A  <|.. B", "A <|.. B");
         test_parse("A  <.. B", "A <.. B");
+
+        test_parse("#[via((0, 0))] A  -- B", "#[via((0, 0))]\nA -- B");
+        test_parse("#[via((0, 0), (1, 0))] A  -- B", "#[via((0, 0), (1, 0))]\nA -- B");
     }
 }

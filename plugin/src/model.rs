@@ -38,21 +38,35 @@ impl fmt::Display for Diagram<'_> {
 #[serde(untagged)]
 pub enum Meta {
     Position(isize, isize),
+    Via(Vec<(isize, isize)>),
 }
 
 impl Meta {
     pub fn name(&self) -> &'static str {
         match self {
             Self::Position(_, _) => "pos",
+            Self::Via(_) => "via",
         }
     }
 }
 
 impl fmt::Display for Meta {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match *self {
-            Self::Position(x, y) => write!(f, "pos({x}, {y})"),
+        write!(f, "{}(", self.name())?;
+        match self {
+            Self::Position(x, y) => write!(f, "{x}, {y}")?,
+            Self::Via(points) => {
+                let mut points = points.iter();
+                if let Some((x, y)) = points.next() {
+                    write!(f, "({x}, {y})")?;
+                    for (x, y) in points {
+                        write!(f, ", ({x}, {y})")?;
+                    }
+                }
+            },
         }
+        write!(f, ")")?;
+        Ok(())
     }
 }
 

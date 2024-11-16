@@ -78,7 +78,8 @@ Parameter: Parameter<'input> = {
 }
 
 Edge: Edge<'input> = {
-    <a: Name> <kind: EdgeKind> <b: Name> => Edge { a, b, kind }
+    <meta: Metas>
+    <a: Name> <kind: EdgeKind> <b: Name> => Edge { meta, a, b, kind }
 }
 
 EdgeKind: EdgeKind<'input> = {
@@ -117,6 +118,10 @@ Metas: BTreeMap<&'input str, Meta> = {
 
 Meta: Meta = {
     "pos" "(" <Num> "," <Num> ")" => Meta::Position(<>),
+    "via" "(" <mut points: ("(" <Num> "," <Num> ")" ",")*> <point: ("(" <Num> "," <Num> ")" ","?)> ")" => {
+        points.push(point);
+        Meta::Via(points)
+    },
 }
 
 ClassifierKind: (ClassifierKind, Option<&'input str>) = {
