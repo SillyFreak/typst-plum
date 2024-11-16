@@ -1,4 +1,5 @@
 use std::borrow::Cow;
+use std::str::FromStr;
 
 use lalrpop_util::lexer::Token;
 use lalrpop_util::ParseError;
@@ -34,6 +35,17 @@ fn from_mark(mark: &str) -> model::AssociationEnd {
         }
     }
     end
+}
+
+fn parse_isize(number: &str) -> Result<'_, isize> {
+    isize::from_str(number).map_err(|_| ParseError::User { error: "number is too big" })
+}
+
+fn parse_f32(number: &str) -> Result<'_, f32> {
+    match f32::from_str(number).expect("value should have conformed to the format") {
+        num if num.is_finite() => Ok(num),
+        _ => Err(ParseError::User { error: "number is too big" }),
+    }
 }
 
 fn parse_string(string: &str) -> Cow<'_, str> {

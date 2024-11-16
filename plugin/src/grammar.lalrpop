@@ -1,12 +1,10 @@
 use std::borrow::Cow;
 use std::collections::BTreeMap;
-use std::str::FromStr;
 
 use either::Either;
-use lalrpop_util::ParseError;
 
 use crate::model::*;
-use super::{from_mark, parse_string};
+use super::{from_mark, parse_isize, parse_f32, parse_string};
 
 grammar;
 
@@ -145,21 +143,12 @@ Name: &'input str = {
 }
 
 Int: isize = {
-    r"[-+]?\d+" =>? isize::from_str(<>)
-        .map_err(|_| ParseError::User {
-            error: "number is too big"
-        }),
+    r"[-+]?\d+" =>? parse_isize(<>),
 }
 
 Float: f32 = {
-    r"[-+]?\d+" =>? f32::from_str(<>)
-        .map_err(|_| ParseError::User {
-            error: "number is too big"
-        }),
-    r"[-+]?\d+\.\d+" =>? f32::from_str(<>)
-        .map_err(|_| ParseError::User {
-            error: "number is too big"
-        }),
+    r"[-+]?\d+" =>? parse_f32(<>),
+    r"[-+]?\d+\.\d+" =>? parse_f32(<>),
 }
 
 String: Cow<'input, str> = {
