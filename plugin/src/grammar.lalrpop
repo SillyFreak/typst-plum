@@ -117,8 +117,8 @@ Metas: BTreeMap<&'input str, Meta> = {
 }
 
 Meta: Meta = {
-    "pos" "(" <Num> "," <Num> ")" => Meta::Position(<>),
-    "via" "(" <mut points: ("(" <Num> "," <Num> ")" ",")*> <point: ("(" <Num> "," <Num> ")" ","?)> ")" => {
+    "pos" "(" <Float> "," <Float> ")" => Meta::Position(<>),
+    "via" "(" <mut points: ("(" <Float> "," <Float> ")" ",")*> <point: ("(" <Float> "," <Float> ")" ","?)> ")" => {
         points.push(point);
         Meta::Via(points)
     },
@@ -144,11 +144,22 @@ Name: &'input str = {
     r"[_\p{ID_Start}][_\p{ID_Continue}-]*"
 }
 
-Num: isize = {
+Int: isize = {
     r"[-+]?\d+" =>? isize::from_str(<>)
         .map_err(|_| ParseError::User {
             error: "number is too big"
-        })
+        }),
+}
+
+Float: f32 = {
+    r"[-+]?\d+" =>? f32::from_str(<>)
+        .map_err(|_| ParseError::User {
+            error: "number is too big"
+        }),
+    r"[-+]?\d+\.\d+" =>? f32::from_str(<>)
+        .map_err(|_| ParseError::User {
+            error: "number is too big"
+        }),
 }
 
 String: Cow<'input, str> = {

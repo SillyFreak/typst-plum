@@ -37,8 +37,8 @@ impl fmt::Display for Diagram<'_> {
 // #[serde(bound(deserialize = "'de: 'input"))]
 #[serde(untagged)]
 pub enum Meta {
-    Position(isize, isize),
-    Via(Vec<(isize, isize)>),
+    Position(f32, f32),
+    Via(Vec<(f32, f32)>),
 }
 
 impl Meta {
