@@ -1,5 +1,6 @@
 #import "classifier.typ"
 #import "edge.typ" as edge: MARKS, add-marks
+#import "package.typ"
 
 #let _p = plugin("parser.wasm")
 
