@@ -208,7 +208,7 @@
 /// Takes given code and both shows it and previews the result of its evaluation.
 ///
 /// The code is by default shown in the language mode `lang: typc` (typst code)
-/// if no language has been specified. Code in typst markup lanugage (`lang: typ`)
+/// if no language has been specified. Code in typst markup language (`lang: typ`)
 /// is automatically evaluated in markup mode.
 ///
 /// - code (raw): Raw object holding the example code.

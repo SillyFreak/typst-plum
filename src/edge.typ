@@ -130,7 +130,7 @@
       let nav = end.at("navigable", default: none)
       let agg = end.at("aggregation", default: none)
 
-      // the mark at the end indicationg aggregation or navigability
+      // the mark at the end indicating aggregation or navigability
       let mark = if nav == true {
         "plum->"
       } else if agg == "aggregate" {
