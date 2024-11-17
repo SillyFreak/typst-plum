@@ -90,7 +90,6 @@
 
   let body = {
     set grid.hline(stroke: 0.5pt)
-    show: block.with(stroke: 0.5pt, radius: 2pt)
 
     grid(
       columns: 2,
@@ -104,5 +103,5 @@
     )
   }
 
-  node(pos, body, name: id, shape: "rect", ..args)
+  node(pos, body, name: id, shape: "rect", stroke: 0.5pt, corner-radius: 2pt, ..args)
 }
