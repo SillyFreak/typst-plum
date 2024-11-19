@@ -21,7 +21,10 @@ pub fn parse(source: &str) -> Result<model::Diagram<'_>> {
     parser.parse(source)
 }
 
-fn from_mark<'input>(mark: &'input str, role: Option<model::Attribute<'input>>) -> model::AssociationEnd<'input> {
+fn from_mark<'input>(
+    mark: &'input str,
+    role: Option<model::Attribute<'input>>,
+) -> model::AssociationEnd<'input> {
     let mut end = model::AssociationEnd::default();
     end.role = role;
     if mark.contains("<") || mark.contains(">") {
@@ -40,13 +43,17 @@ fn from_mark<'input>(mark: &'input str, role: Option<model::Attribute<'input>>) 
 }
 
 fn parse_isize(number: &str) -> Result<'_, isize> {
-    isize::from_str(number).map_err(|_| ParseError::User { error: "number is too big" })
+    isize::from_str(number).map_err(|_| ParseError::User {
+        error: "number is too big",
+    })
 }
 
 fn parse_f32(number: &str) -> Result<'_, f32> {
     match f32::from_str(number).expect("value should have conformed to the format") {
         num if num.is_finite() => Ok(num),
-        _ => Err(ParseError::User { error: "number is too big" }),
+        _ => Err(ParseError::User {
+            error: "number is too big",
+        }),
     }
 }
 
@@ -133,8 +140,14 @@ mod tests {
         test_parse("A (- a) -- (-b [*]) B", "A (- a) -- (- b [*]) B");
 
         test_parse("#[via((0, 0))] A  -- B", "#[via((0, 0))]\nA -- B");
-        test_parse("#[via((0, 0), (1, 0))] A  -- B", "#[via((0, 0), (1, 0))]\nA -- B");
+        test_parse(
+            "#[via((0, 0), (1, 0))] A  -- B",
+            "#[via((0, 0), (1, 0))]\nA -- B",
+        );
         test_parse("#[bend(-15deg)] A  -- B", "#[bend(-15deg)]\nA -- B");
-        test_parse("#[via((0, 0)), bend(0.3rad)] A  -- B", "#[bend(17.188734deg), via((0, 0))]\nA -- B");
+        test_parse(
+            "#[via((0, 0)), bend(0.3rad)] A  -- B",
+            "#[bend(17.188734deg), via((0, 0))]\nA -- B",
+        );
     }
 }

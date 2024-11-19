@@ -66,10 +66,10 @@ impl fmt::Display for Meta {
                         write!(f, ", ({x}, {y})")?;
                     }
                 }
-            },
+            }
             Self::Bend(angle) => {
                 write!(f, "{}deg", angle * 180.0 / PI)?;
-            },
+            }
         }
         write!(f, ")")?;
         Ok(())

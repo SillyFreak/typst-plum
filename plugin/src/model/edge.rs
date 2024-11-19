@@ -6,10 +6,7 @@ use serde::{Deserialize, Serialize};
 use super::{Attribute, Meta};
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(
-    bound(deserialize = "'de: 'input"),
-    rename_all = "kebab-case"
-)]
+#[serde(bound(deserialize = "'de: 'input"), rename_all = "kebab-case")]
 pub struct Edge<'input> {
     #[serde(flatten)]
     pub meta: BTreeMap<&'input str, Meta>,
@@ -92,10 +89,7 @@ pub enum Direction {
 }
 
 #[derive(Serialize, Deserialize, Default, Debug, Clone, PartialEq)]
-#[serde(
-    bound(deserialize = "'de: 'input"),
-    rename_all = "kebab-case"
-)]
+#[serde(bound(deserialize = "'de: 'input"), rename_all = "kebab-case")]
 pub struct AssociationEnd<'input> {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub aggregation: Option<Aggregation>,

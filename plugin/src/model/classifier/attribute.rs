@@ -15,7 +15,7 @@ pub struct Attribute<'input> {
     pub name: &'input str,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub r#type: Option<Cow<'input, str>>,
-    #[serde(skip_serializing_if  = "Option::is_none")]
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub multiplicity: Option<MultiplicityRange>,
 }
 
@@ -60,7 +60,7 @@ impl serde::Serialize for MultiplicityRange {
     }
 }
 
-impl<'de> serde::Deserialize<'de> for MultiplicityRange  {
+impl<'de> serde::Deserialize<'de> for MultiplicityRange {
     fn deserialize<D>(deserializer: D) -> Result<MultiplicityRange, D::Error>
     where
         D: serde::Deserializer<'de>,
@@ -73,7 +73,8 @@ impl<'de> serde::Deserialize<'de> for MultiplicityRange  {
             type Value = MultiplicityRange;
 
             fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-                formatter.write_str("a multiplicity (e.g. 0, *) or multiplicity range (e.g. 0..2, 1..*)")
+                formatter
+                    .write_str("a multiplicity (e.g. 0, *) or multiplicity range (e.g. 0..2, 1..*)")
             }
 
             fn visit_str<E>(self, value: &str) -> Result<Self::Value, E>
@@ -81,20 +82,25 @@ impl<'de> serde::Deserialize<'de> for MultiplicityRange  {
                 E: de::Error,
             {
                 let mut parts = value.split("..");
-                let first = parts.next().expect("splitting should result in at least one part");
+                let first = parts
+                    .next()
+                    .expect("splitting should result in at least one part");
                 let second = parts.next();
                 if !parts.next().is_none() {
                     return Err(de::Error::invalid_value(de::Unexpected::Str(value), &self));
                 }
                 let first = Multiplicity::from_str(first)
                     .map_err(|_| de::Error::invalid_value(de::Unexpected::Str(value), &self))?;
-                let second = second.map(|second| {
-                    Multiplicity::from_str(second)
-                        .map_err(|_| de::Error::invalid_value(de::Unexpected::Str(value), &self))
-                }).transpose()?;
+                let second = second
+                    .map(|second| {
+                        Multiplicity::from_str(second).map_err(|_| {
+                            de::Error::invalid_value(de::Unexpected::Str(value), &self)
+                        })
+                    })
+                    .transpose()?;
                 let result = match (first, second) {
-                    (number,  None) => MultiplicityRange::Exact(number),
-                    (lower,  Some(upper)) => MultiplicityRange::Range(lower, upper),
+                    (number, None) => MultiplicityRange::Exact(number),
+                    (lower, Some(upper)) => MultiplicityRange::Range(lower, upper),
                 };
                 Ok(result)
             }
