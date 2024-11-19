@@ -2,7 +2,7 @@
 #import "@preview/crudo:0.1.1"
 
 #set document(date: none)
-#set page(width: 10cm, height: auto, margin: 5mm)
+#set page(width: 11cm, height: auto, margin: 5mm)
 #set text(0.85em)
 
 #plum.add-marks()
@@ -10,19 +10,19 @@
 #let diagram = ```
 #[pos(0, 1)]
 class Foo as X {
-  - attr
+  - attr [1]
   attr2: X
   + op()
 }
 
-#[pos(1, 0)]
-interface Bar
-
 #[pos(2, 1)]
 abstract class Baz {
-  # bars: "List<Bar>"
+  # bars: "List<Bar>" [1..*]
   + op(x: X, y: Y): Z
 }
+
+#[pos(1, 0)]
+interface Bar
 
 #[bend(45deg)]
 X ..|> Bar
@@ -32,8 +32,9 @@ Bar <--x-o Baz
 
 #grid(
   columns: (1fr, 1fr),
-  crudo.lines(diagram, "-9"),
-  crudo.lines(diagram, "11-"),
+  column-gutter: 1em,
+  crudo.lines(diagram, "-12"),
+  crudo.lines(diagram, "14-"),
 )
 
 // #plum.parse(diagram)

@@ -2,12 +2,14 @@
   visibility: none,
   name: none,
   type: none,
+  multiplicity: none,
 ) = {
   assert.ne(name, none, message: "name is required")
 
   (visibility, {
     name
     if type != none [: #type]
+    if multiplicity != none [ \[#multiplicity\]]
   })
 }
 
