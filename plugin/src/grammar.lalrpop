@@ -107,7 +107,7 @@ Visibility: Visibility = {
 }
 
 Metas: BTreeMap<&'input str, Meta> = {
-    "#[" <mut attrs: (<Meta> ",")*> <attr: (<Meta> ","?)> "]" "\n"* => {
+    "#[" "\n"* <mut attrs: (<Meta> "," "\n"*)*> <attr: (<Meta> ","? "\n"*)> "]" "\n"* => {
         attrs.push(attr);
         BTreeMap::from_iter(attrs.into_iter().map(|attr| (attr.name(), attr)))
     },
