@@ -17,7 +17,6 @@ class Foo as X {
 
 #[pos(2, 1)]
 abstract class Baz {
-  # bars: "List<Bar>" [1..*]
   + op(x: X, y: Y): Z
 }
 
@@ -27,7 +26,7 @@ interface Bar
 #[bend(45deg)]
 X ..|> Bar
 #[via((1, 0.4), (2, 0.4))]
-Bar <--x-o Baz
+Bar (# bars: "List<Bar>" [0..*]) <--x-o Baz
 ```
 
 #grid(

@@ -157,6 +157,43 @@
   }
 
   edge(a, ..via, b, ..opts, ..args)
+  if kind.type in ("association",) {
+    let fake-edge(pos, side, label) = {
+      edge(
+        a, ..via, b,
+        ..opts,
+        stroke: black.transparentize(100%),
+        marks: (),
+        label: label,
+        label-pos: pos,
+        label-side: side,
+        ..args
+      )
+    }
+
+    let fake-edges(pos, visibility: none, name: none, type: none, multiplicity: none) = {
+      fake-edge(pos, left, {
+        set text(0.8em)
+        if visibility != none [#visibility ]
+        name
+        if type != none [: #type]
+      })
+      if multiplicity != none {
+        fake-edge(pos, right, {
+          set text(0.8em)
+          multiplicity
+        })
+      }
+    }
+
+    let (a, b) = kind
+    if "role" in a {
+      fake-edges(0.15, ..a.role)
+    }
+    if "role" in b {
+      fake-edges(0.85, ..b.role)
+    }
+  }
 }
 
   // uml-edge(<subj>, <conc-subj>, "generalize-")
