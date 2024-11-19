@@ -50,8 +50,8 @@ ClassifierBody: (Vec<Attribute<'input>>, Vec<Operation<'input>>) = {
 }
 
 Attribute: Attribute<'input> = {
-    <visibility: Visibility?> <name: Name> <r#type: (":" <NameOrString>)?> => {
-        Attribute { visibility, name, r#type }
+    <visibility: Visibility?> <name: Name> <r#type: (":" <NameOrString>)?> <multiplicity: ("[" <MultiplicityRange> "]")?> => {
+        Attribute { visibility, name, r#type, multiplicity }
     }
 }
 
@@ -104,6 +104,16 @@ Visibility: Visibility = {
     "~" => Visibility::Package,
     "#" => Visibility::Protected,
     "+" => Visibility::Public,
+}
+
+MultiplicityRange: MultiplicityRange = {
+    Multiplicity => MultiplicityRange::Exact(<>),
+    <Multiplicity> ".." <Multiplicity> => MultiplicityRange::Range(<>),
+}
+
+Multiplicity: Multiplicity = {
+    Int => Multiplicity::Number(<>),
+    "*" => Multiplicity::Any,
 }
 
 Metas: BTreeMap<&'input str, Meta> = {

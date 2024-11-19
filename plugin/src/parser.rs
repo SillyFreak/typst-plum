@@ -109,12 +109,12 @@ mod tests {
         test_parse(
             r#"
             class A {
-                - attr
-                +   attr2: "Baz<T>"
+                - attr [2 ]
+                +   attr2: "Baz<T>" [ 0.. *]
                 + op( x, )
                 + op(x:  X , y: Y): Z
             }"#,
-            "class A {\n  - attr\n  + attr2: Baz<T>\n  + op(x)\n  + op(x: X, y: Y): Z\n}",
+            "class A {\n  - attr [2]\n  + attr2: Baz<T> [0..*]\n  + op(x)\n  + op(x: X, y: Y): Z\n}",
         );
     }
 

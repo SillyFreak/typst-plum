@@ -8,7 +8,7 @@ use super::{helpers, Meta};
 mod attribute;
 mod operation;
 
-pub use attribute::Attribute;
+pub use attribute::{Attribute, Multiplicity, MultiplicityRange};
 pub use operation::{Operation, Parameter};
 
 /// A [classifier](https://www.uml-diagrams.org/classifier.html).
