@@ -87,13 +87,13 @@ EdgeKind: EdgeKind<'input> = {
     "<|--" => EdgeKind::Generalization { direction: Direction::BToA },
     "..>" => EdgeKind::Dependency { direction: Direction::AToB, name: None },
     "<.." => EdgeKind::Dependency { direction: Direction::BToA, name: None },
-    r"([<x]|[o*]?(-x)?)--((x-)?[o*]?|[x>])" => {
+    <a_role: ("(" <Attribute> ")")?> <marks: r"([<x]|[o*]?(-x)?)--((x-)?[o*]?|[x>])"> <b_role: ("(" <Attribute> ")")?>  => {
         let (a, b) = {
-            let mut iter = <>.split("--");
+            let mut iter = marks.split("--");
             let a = iter.next().unwrap();
             let b = iter.next().unwrap();
             assert!(iter.next().is_none());
-            (from_mark(a), from_mark(b))
+            (from_mark(a, a_role), from_mark(b, b_role))
         };
         EdgeKind::Association { name: None, a, b }
     },

@@ -21,8 +21,9 @@ pub fn parse(source: &str) -> Result<model::Diagram<'_>> {
     parser.parse(source)
 }
 
-fn from_mark(mark: &str) -> model::AssociationEnd {
+fn from_mark<'input>(mark: &'input str, role: Option<model::Attribute<'input>>) -> model::AssociationEnd<'input> {
     let mut end = model::AssociationEnd::default();
+    end.role = role;
     if mark.contains("<") || mark.contains(">") {
         end.navigable = Some(true);
     } else {
@@ -128,6 +129,8 @@ mod tests {
         test_parse("A  --|> B", "A --|> B");
         test_parse("A  <|.. B", "A <|.. B");
         test_parse("A  <.. B", "A <.. B");
+
+        test_parse("A (- a) -- (-b [*]) B", "A (- a) -- (- b [*]) B");
 
         test_parse("#[via((0, 0))] A  -- B", "#[via((0, 0))]\nA -- B");
         test_parse("#[via((0, 0), (1, 0))] A  -- B", "#[via((0, 0), (1, 0))]\nA -- B");

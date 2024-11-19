@@ -3,7 +3,7 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 
-use super::Meta;
+use super::{Attribute, Meta};
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(
@@ -92,34 +92,47 @@ pub enum Direction {
 }
 
 #[derive(Serialize, Deserialize, Default, Debug, Clone, PartialEq)]
-#[serde(rename_all = "kebab-case")]
+#[serde(
+    bound(deserialize = "'de: 'input"),
+    rename_all = "kebab-case"
+)]
 pub struct AssociationEnd<'input> {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub aggregation: Option<Aggregation>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub navigable: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub role: Option<&'input str>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub multiplicity: Option<&'input str>,
+    pub role: Option<Attribute<'input>>,
 }
 
 impl fmt::Display for AssociationEnd<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         use Aggregation as A;
 
-        match (self.aggregation, self.navigable, f.alternate()) {
-            (Some(A::Aggregate), Some(false), false) => write!(f, "x-o"),
-            (Some(A::Aggregate), Some(false), true) => write!(f, "o-x"),
-            (Some(A::Aggregate), _, _) => write!(f, "o"),
-            (Some(A::Composite), Some(false), false) => write!(f, "x-*"),
-            (Some(A::Composite), Some(false), true) => write!(f, "*-x"),
-            (Some(A::Composite), _, _) => write!(f, "*"),
-            (None, None, _) => write!(f, ""),
-            (None, Some(false), _) => write!(f, "x"),
-            (None, Some(true), false) => write!(f, ">"),
-            (None, Some(true), true) => write!(f, "<"),
+        if f.alternate() {
+            if let Some(role) = &self.role {
+                write!(f, "({}) ", role)?;
+            }
         }
+        match (self.aggregation, self.navigable, f.alternate()) {
+            (Some(A::Aggregate), Some(false), false) => write!(f, "x-o")?,
+            (Some(A::Aggregate), Some(false), true) => write!(f, "o-x")?,
+            (Some(A::Aggregate), _, _) => write!(f, "o")?,
+            (Some(A::Composite), Some(false), false) => write!(f, "x-*")?,
+            (Some(A::Composite), Some(false), true) => write!(f, "*-x")?,
+            (Some(A::Composite), _, _) => write!(f, "*")?,
+            (None, None, _) => write!(f, "")?,
+            (None, Some(false), _) => write!(f, "x")?,
+            (None, Some(true), false) => write!(f, ">")?,
+            (None, Some(true), true) => write!(f, "<")?,
+        }
+        if !f.alternate() {
+            if let Some(role) = &self.role {
+                write!(f, " ({})", role)?;
+            }
+        }
+
+        Ok(())
     }
 }
 
