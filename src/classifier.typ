@@ -1,20 +1,39 @@
 #let attribute(
   visibility: none,
+  static: false,
   name: none,
   type: none,
   multiplicity: none,
+  modifiers: (),
 ) = {
   assert.ne(name, none, message: "name is required")
 
+  let modifier(m) = {
+    if std.type(m) == str {
+      m
+    } else if "redefines" in m {
+      [redefines #m.redefines]
+    } else if "subsets" in m {
+      [subsets #m.redefines]
+    } else if "constraint" in m {
+      m.constraint
+    } else {
+      panic("unknown modifier: " + repr(m))
+    }
+  }
+
   (visibility, {
+    show: if static { underline } else { it => it }
     name
     if type != none [: #type]
     if multiplicity != none [ \[#multiplicity\]]
+    if modifiers != () [ {#modifiers.map(modifier).join[, ]}]
   })
 }
 
 #let operation(
   visibility: none,
+  abstract: false,
   name: none,
   parameters: (),
   return-type: none,
@@ -32,6 +51,7 @@
   assert.ne(name, none, message: "name is required")
 
   (visibility, {
+    set text(style: "italic") if abstract
     name
     [(#parameters.map(p => parameter(..p)).join[, ])]
     if return-type != none [: #return-type]

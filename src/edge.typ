@@ -171,7 +171,8 @@
       )
     }
 
-    let fake-edges(pos, visibility: none, name: none, type: none, multiplicity: none) = {
+    let fake-edges(pos, visibility: none, static: false, name: none, type: none, multiplicity: none) = {
+      assert(not static, message: "static edges are not allowed")
       fake-edge(pos, left, {
         set text(0.8em)
         if visibility != none [#visibility ]

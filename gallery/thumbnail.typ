@@ -10,14 +10,14 @@
 #let diagram = ```
 #[pos(0, 1)]
 class Foo as X {
-  - attr [1]
-  attr2: X
+  - static attr [1] {readOnly}
+  attr2: X {"attr != null"}
   + op()
 }
 
 #[pos(2, 1)]
 abstract class Baz {
-  + op(x: X, y: Y): Z
+  + abstract op(x: X, y: Y): Z
 }
 
 #[pos(1, 0)]
