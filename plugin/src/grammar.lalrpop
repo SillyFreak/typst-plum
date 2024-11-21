@@ -50,8 +50,9 @@ ClassifierBody: (Vec<Attribute<'input>>, Vec<Operation<'input>>) = {
 }
 
 Attribute: Attribute<'input> = {
-    <visibility: Visibility?> <name: Name> <r#type: (":" <NameOrString>)?> <multiplicity: ("[" <MultiplicityRange> "]")?> => {
-        Attribute { visibility, name, r#type, multiplicity }
+    <visibility: Visibility?> <name: Name> <r#type: (":" <NameOrString>)?>
+    <multiplicity: ("[" <MultiplicityRange> "]")?> <modifiers: Modifiers> => {
+        Attribute { visibility, name, r#type, multiplicity, modifiers }
     }
 }
 
@@ -114,6 +115,28 @@ MultiplicityRange: MultiplicityRange = {
 Multiplicity: Multiplicity = {
     Int => Multiplicity::Number(<>),
     "*" => Multiplicity::Any,
+}
+
+Modifiers: Vec<Modifier<'input>> = {
+    => Vec::new(),
+    "{" <mut modifiers: (<Modifier> ",")*> <modifier: Modifier> ","? "}" => {
+        modifiers.push(modifier);
+        modifiers
+    },
+}
+
+Modifier: Modifier<'input> = {
+    "id" => Modifier::Id,
+    "readOnly" => Modifier::ReadOnly,
+    "ordered" => Modifier::Ordered,
+    "unique" => Modifier::Unique,
+    "nonunique" => Modifier::Nonunique,
+    "seq" => Modifier::Sequence,
+    "sequence" => Modifier::Sequence,
+    "union" => Modifier::Union,
+    "redefines" <Name> => Modifier::Redefines(<>),
+    "subsets" <Name> => Modifier::Subsets(<>),
+    String => Modifier::Constraint(<>),
 }
 
 Metas: BTreeMap<&'input str, Meta> = {

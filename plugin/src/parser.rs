@@ -124,6 +124,15 @@ mod tests {
             }"#,
             "class A {\n  - attr [2]\n  + attr2: Baz<T> [0..*]\n  + op(x)\n  + op(x: X, y: Y): Z\n}",
         );
+        test_parse(
+            r#"
+            class  A  {
+                - attr {id, readOnly, "attr != null"}
+                - x {subsets attr}
+                + op(): Bar
+            }"#,
+            "class A {\n  - attr {id, readOnly, attr != null}\n  - x {subsets attr}\n  + op(): Bar\n}",
+        );
     }
 
     #[test]
