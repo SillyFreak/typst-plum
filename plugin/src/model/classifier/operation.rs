@@ -4,12 +4,15 @@ use std::fmt;
 use serde::{Deserialize, Serialize};
 
 use crate::model::Visibility;
+use super::helpers;
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 #[serde(rename_all = "kebab-case")]
 pub struct Operation<'input> {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub visibility: Option<Visibility>,
+    #[serde(skip_serializing_if  = "helpers::is_false")]
+    pub r#abstract: bool,
     pub name: &'input str,
     pub parameters: Vec<Parameter<'input>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -20,6 +23,9 @@ impl fmt::Display for Operation<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         if let Some(visibility) = self.visibility {
             write!(f, "{} ", visibility)?;
+        }
+        if self.r#abstract {
+            write!(f, "abstract ")?;
         }
         write!(f, "{}(", self.name)?;
         let mut parameters = self.parameters.iter();

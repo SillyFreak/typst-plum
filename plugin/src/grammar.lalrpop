@@ -50,15 +50,17 @@ ClassifierBody: (Vec<Attribute<'input>>, Vec<Operation<'input>>) = {
 }
 
 Attribute: Attribute<'input> = {
-    <visibility: Visibility?> <name: Name> <r#type: (":" <NameOrString>)?>
+    <visibility: Visibility?> <r#static: "static"?> <name: Name> <r#type: (":" <NameOrString>)?>
     <multiplicity: ("[" <MultiplicityRange> "]")?> <modifiers: Modifiers> => {
-        Attribute { visibility, name, r#type, multiplicity, modifiers }
+        let r#static = r#static.is_some();
+        Attribute { visibility, r#static, name, r#type, multiplicity, modifiers }
     }
 }
 
 Operation: Operation<'input> = {
-    <visibility: Visibility?> <name: Name> "(" <parameters: Parameters> ")" <return_type: (":" <NameOrString>)?> => {
-        Operation { visibility, name, parameters, return_type }
+    <visibility: Visibility?> <r#abstract: "abstract"?> <name: Name> "(" <parameters: Parameters> ")" <return_type: (":" <NameOrString>)?> => {
+        let r#abstract = r#abstract.is_some();
+        Operation { visibility, r#abstract, name, parameters, return_type }
     }
 }
 

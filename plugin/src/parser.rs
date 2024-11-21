@@ -109,20 +109,20 @@ mod tests {
         test_parse(
             r#"
             class  A  {
-                 - attr:  Foo
+                 - static attr:  Foo
                 + op ( ) :  Bar
             }"#,
-            "class A {\n  - attr: Foo\n  + op(): Bar\n}",
+            "class A {\n  - static attr: Foo\n  + op(): Bar\n}",
         );
         test_parse(
             r#"
             class A {
                 - attr [2 ]
                 +   attr2: "Baz<T>" [ 0.. *]
-                + op( x, )
+                + abstract op( x, )
                 + op(x:  X , y: Y): Z
             }"#,
-            "class A {\n  - attr [2]\n  + attr2: Baz<T> [0..*]\n  + op(x)\n  + op(x: X, y: Y): Z\n}",
+            "class A {\n  - attr [2]\n  + attr2: Baz<T> [0..*]\n  + abstract op(x)\n  + op(x: X, y: Y): Z\n}",
         );
         test_parse(
             r#"
