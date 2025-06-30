@@ -1,1 +1,2 @@
-#import "@preview/fletcher:0.5.2"
+#import "@preview/fletcher:0.5.8"
+#import fletcher: cetz

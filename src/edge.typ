@@ -60,7 +60,7 @@
     stroke: (miter-limit: 20),
 
     draw: mark => {
-      import "@preview/cetz:0.3.1": draw
+      import "imports.typ": cetz.draw
 
       draw.line(
         (0,0),

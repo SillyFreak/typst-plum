@@ -19,10 +19,13 @@
 /// - diagram (str): the expression to parse
 /// -> dict
 #let parse(diagram) = {
+  // Typst 0.13: `cbor.decode` is deprecated, directly pass bytes to `cbor` instead
+  let decode = if sys.version < version(0, 13, 0) { cbor.decode } else { cbor }
+
   if type(diagram) == content and diagram.func() == raw {
     diagram = diagram.text
   }
-  cbor.decode(_p.parse(cbor.encode(diagram)))
+  decode(_p.parse(cbor.encode(diagram)))
 }
 
 /// Parses and processes a diagram.
