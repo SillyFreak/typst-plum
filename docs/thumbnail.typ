@@ -1,8 +1,12 @@
 #import "/src/lib.typ" as plum
 #import "@preview/crudo:0.1.1"
 
-#set document(date: none)
-#set page(width: 11cm, height: auto, margin: 5mm)
+#set page(height: auto, margin: 5mm, /*fill: none*/)
+
+// style thumbnail for light and dark theme
+#let theme = sys.inputs.at("theme", default: "light")
+#set text(white) if theme == "dark"
+
 #set text(0.85em)
 
 #plum.add-marks()

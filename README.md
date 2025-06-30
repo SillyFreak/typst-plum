@@ -35,7 +35,10 @@ Bar <--x-o Baz
 #plum.plum(diagram)
 ````
 
-![Example](./thumbnail.png)
+<picture>
+  <!-- <source media="(prefers-color-scheme: dark)" srcset="./thumbnail-dark.svg"> -->
+  <img src="./thumbnail-light.svg">
+</picture>
 
 ## Usage
 

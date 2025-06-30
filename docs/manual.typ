@@ -1,24 +1,22 @@
 #import "template.typ" as template: *
 #import "/src/lib.typ" as plum
 
-#let package-meta = toml("/typst.toml").package
-#let date = none
-// #let date = datetime(year: ..., month: ..., day: ...)
-
 #show: manual(
+  package-meta: toml("/typst.toml").package,
   title: "Plum",
-  // subtitle: "...",
-  authors: package-meta.authors.map(a => a.split("<").at(0).trim()),
-  abstract: [
+  subtitle: [
     _Plum_ lets you create UML class diagrams in Typst; inspired by but _not_ compatible with PlantUML.
   ],
-  url: package-meta.repository,
-  version: package-meta.version,
-  date: date,
-)
+  date: none,
+  // date: datetime(year: ..., month: ..., day: ...),
 
-// the scope for evaluating expressions and documentation
-#let scope = (plum: plum)
+  // logo: rect(width: 5cm, height: 5cm),
+  // abstract: [
+  //   A PACKAGE for something
+  // ],
+
+  scope: (plum: plum),
+)
 
 = Introduction
 
@@ -30,5 +28,4 @@
   read("/src/lib.typ"),
   name: "plum",
   label-prefix: none,
-  scope: scope,
 )
