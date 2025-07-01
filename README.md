@@ -32,11 +32,14 @@ X ..|> Bar
 Bar <--x-o Baz
 ```
 
+#import plum: elembic as e, classifier.classifier
+#show: e.cond-set(classifier.with(name: [Foo]), fill: gray)
+
 #plum.plum(diagram)
 ````
 
 <picture>
-  <!-- <source media="(prefers-color-scheme: dark)" srcset="./thumbnail-dark.svg"> -->
+  <source media="(prefers-color-scheme: dark)" srcset="./thumbnail-dark.svg">
   <img src="./thumbnail-light.svg">
 </picture>
 
