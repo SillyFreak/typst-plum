@@ -9,23 +9,15 @@
   // },
 
   display: it => {
-    import "imports.typ": fletcher
+    import "imports.typ": fletcher.diagram
+    import "e-classifier.typ" as classifier
 
-    fletcher.diagram(
+    diagram(
       node-inset: 0pt,
       axes: (ltr, ttb),
       {
         for x in it.classifiers {
-          let (name, id, position) = (id: auto, position: auto, ..e.fields(x))
-          if id == auto {
-            assert(type(name) == content and name.func() == text)
-            id = name.text
-          }
-          if type(id) == str { id = label(id) }
-
-          assert.ne(position, auto, message: "automatic positioning is currently not supported. add #[pos(x, y)] to each classifier")
-
-          fletcher.node(position, x, name: id, shape: "rect")
+          classifier.to-fletcher(x)
         }
         for (a, b, kind, ..args) in it.edges {
           edge.edge(a, b, kind, ..args)

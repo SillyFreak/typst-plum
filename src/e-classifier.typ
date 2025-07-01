@@ -240,3 +240,18 @@
     e.field("radius", e.types.union(relative, dictionary), default: 2pt),
   )
 )
+
+#let to-fletcher(it) = {
+  import "imports.typ": fletcher.node
+
+  let (name, id, position) = (id: auto, position: auto, ..e.fields(it))
+  if id == auto {
+    assert(type(name) == content and name.func() == text)
+    id = name.text
+  }
+  if type(id) == str { id = label(id) }
+
+  assert.ne(position, auto, message: "automatic positioning is currently not supported. add #[pos(x, y)] to each classifier")
+
+  node(position, it, name: id, shape: "rect")
+}
