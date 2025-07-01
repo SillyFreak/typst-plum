@@ -11,6 +11,7 @@
   display: it => {
     import "imports.typ": fletcher.diagram
     import "e-classifier.typ" as classifier
+    import "e-edge.typ" as edge
 
     diagram(
       node-inset: 0pt,
@@ -19,8 +20,8 @@
         for x in it.classifiers {
           classifier.to-fletcher(x)
         }
-        for (a, b, kind, ..args) in it.edges {
-          edge.edge(a, b, kind, ..args)
+        for x in it.edges {
+          edge.to-fletcher(x)
         }
       }
     )

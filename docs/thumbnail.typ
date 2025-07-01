@@ -77,8 +77,11 @@ Bar (# bars: "List<Bar>" [0..*]) <--x-o Baz
 #[
   #let (classifiers, edges) = plum.parse(diagram)
   #import plum.e-diagram: diagram
+  #import plum.e-edge: edge
 
   #show: e.show_(diagram, it => { set text(font: ("FreeSans",), size: 0.8em); it })
+
+  #edge(<a>, <b>, (type: "dependency"))
 
   #align(center, diagram(
     classifiers: (
@@ -86,6 +89,8 @@ Bar (# bars: "List<Bar>" [0..*]) <--x-o Baz
       classifier("Baz", position: (2, 1)),
       classifier("Bar", position: (1, 0)),
     ),
-    edges: edges,
+    edges: (
+      edge(<X>, "Baz", (type: "dependency", direction: "a-to-b")),
+    ),
   ))
 ]
