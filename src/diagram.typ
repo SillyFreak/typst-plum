@@ -10,8 +10,8 @@
 
   display: it => {
     import "imports.typ": fletcher.diagram
-    import "e-classifier.typ" as classifier
-    import "e-edge.typ" as edge
+    import "classifier.typ" as classifier
+    import "edge.typ" as edge
 
     diagram(
       node-inset: 0pt,

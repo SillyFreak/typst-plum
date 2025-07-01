@@ -11,7 +11,7 @@
 
 #plum.add-marks()
 
-#let diagram = ```
+#let diagram-src = ```
 #[pos(0, 1)]
 class Foo as X {
   - static attr [1] {readOnly}
@@ -36,61 +36,15 @@ Bar (# bars: "List<Bar>" [0..*]) <--x-o Baz
 #grid(
   columns: (1fr, 1fr),
   column-gutter: 1em,
-  crudo.lines(diagram, "-11"),
-  crudo.lines(diagram, "13-"),
+  crudo.lines(diagram-src, "-11"),
+  crudo.lines(diagram-src, "13-"),
 )
 
-// #plum.parse(diagram)
+// #plum.parse(diagram-src)
 
-#align(center, plum.plum(diagram))
+#import plum: elembic as e, diagram.diagram, classifier.classifier
 
-#import plum.elembic as e
-#import plum.e-classifier: classifier, name, member, divider, attribute, operation
-
+#show: e.show_(diagram, it => { set text(font: ("FreeSans",), size: 0.8em); it })
 #show: e.cond-set(classifier.with(name: [Foo]), fill: gray)
 
-#[
-  #show: e.show_(classifier, it => { set text(font: ("FreeSans",), size: 0.8em); it })
-  // #show: e.set_(classifier, visibility-width: 2em)
-
-  #classifier(
-    "Foo",
-    kind: "interface",
-    // empty-sections: false,
-    members: (
-      member(visibility: "+", static: true, attribute(
-        multiplicity: [1],
-        modifiers: ("readOnly",),
-        "attr",
-      )),
-      divider(),
-      member(visibility: "-", abstract: true, operation(
-        "op",
-        return-type: "bool",
-        parameters: ((name: "b", type: "Bar"),),
-      )),
-      member[#h(2cm)#v(2cm)],
-    ),
-  )
-]
-
-#[
-  #let (classifiers, edges) = plum.parse(diagram)
-  #import plum.e-diagram: diagram
-  #import plum.e-edge: edge
-
-  #show: e.show_(diagram, it => { set text(font: ("FreeSans",), size: 0.8em); it })
-
-  #edge(<a>, <b>, (type: "dependency"))
-
-  #align(center, diagram(
-    classifiers: (
-      classifier("Foo", id: <X>, position: (0, 1)),
-      classifier("Baz", position: (2, 1)),
-      classifier("Bar", position: (1, 0)),
-    ),
-    edges: (
-      edge(<X>, "Baz", (type: "dependency", direction: "a-to-b")),
-    ),
-  ))
-]
+#align(center, plum.plum(diagram-src))

@@ -1,3 +1,5 @@
+#import "imports.typ": elembic as e
+
 #let MARKS = (
   "plum-|>": (inherit: "stealth", angle: 30deg, stealth: 0, size: 14, fill: none),
   "plum->": (inherit: "straight", sharpness: 30deg, size: 14),
@@ -12,21 +14,31 @@
   fletcher.MARKS.update(marks => (: ..marks, ..MARKS))
 }
 
-// #let assoc = edge.with(dash: none)
-// #let assoc = edge.with(dash: none, marks: (
-// 	none,
-// 		(kind: "vee", sharpness: 30deg, size: 12),
-// ))
-#let edge(
-  a,
-  b,
-  kind,
-  via: (),
-  bend: none,
-  ..args
-) = {
+#let edge = e.element.declare(
+  "edge",
+  prefix: "@preview/plum,v1",
+
+  // template: it => {
+  //   it
+  // },
+
+  display: it => {
+    [edge(#repr(it.a), #repr(it.b), #repr(it.kind.type))]
+  },
+
+  fields: (
+    e.field("a", e.types.union(str, label), required: true),
+    e.field("b", e.types.union(str, label), required: true),
+    e.field("kind", dictionary, required: true),
+    e.field("via", array, default: ()),
+    e.field("bend", e.types.union(none, float), default: none),
+  ),
+)
+
+#let to-fletcher(it) = {
   import "imports.typ": fletcher.edge
 
+  let (a, b, kind, via, bend) = (via: (), bend: none, ..e.fields(it))
   if type(a) == str { a = label(a) }
   if type(b) == str { b = label(b) }
 
@@ -90,7 +102,7 @@
     opts.bend = bend * 1rad
   }
 
-  edge(a, ..via, b, ..opts, ..args)
+  edge(a, ..via, b, ..opts)
   if kind.type in ("association",) {
     let fake-edge(pos, side, label) = {
       edge(
@@ -101,7 +113,6 @@
         label: label,
         label-pos: pos,
         label-side: side,
-        ..args
       )
     }
 
@@ -130,32 +141,3 @@
     }
   }
 }
-
-  // uml-edge(<subj>, <conc-subj>, "generalize-")
-  // uml-edge(<obs>, <conc-obs>, "realize--")
-  // uml-edge(
-  //   <subj>, <obs>,
-  //   marks: (
-  //     "aggregate",
-  //     (inherit: "non-navigable", pos: 0, rev: true, extrude: (-27,)),
-  //     "navigable",
-  //   ),
-  //   labels: (
-  //     // arguments([1], label-pos: 0.05, label-anchor: "south-west"),
-  //     arguments([0..\*], label-pos: 0.95, label-anchor: "north-east", label-side: right),
-  //     arguments([-- observers], label-pos: 0.95, label-anchor: "south-east", label-side: left),
-  //   ),
-  // )
-  // uml-edge(
-  //   <conc-obs>, <conc-subj>,
-  //   marks: (
-  //     "aggregate",
-  //     (inherit: "non-navigable", pos: 0, rev: true, extrude: (-27,)),
-  //     "navigable",
-  //   ),
-  //   labels: (
-  //     // arguments([1], label-pos: 0.05, label-anchor: "south-east"),
-  //     arguments([1], label-pos: 0.95, label-anchor: "south-west"),
-  //     arguments([-- subject], label-pos: 0.95, label-anchor: "north-west", label-side: left),
-  //   ),
-  // )

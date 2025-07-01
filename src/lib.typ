@@ -3,11 +3,12 @@
 #import "package.typ"
 
 #import "imports.typ": elembic
-#import "e-classifier.typ"
-#import "e-diagram.typ"
-#import "e-edge.typ"
+#import "classifier.typ"
+#import "diagram.typ"
+#import "edge.typ"
 
 #let _p = plugin("parser.wasm")
+#let _diagram = diagram
 
 /// Parses a diagram via a WASM plugin.
 ///
@@ -53,22 +54,41 @@
   /// -> str | content
   diagram,
 ) = {
-  import "imports.typ": fletcher
-
   set text(font: ("FreeSans",), size: 0.8em)
 
   let diagram = parse(diagram)
 
-  fletcher.diagram(
-    node-inset: 0pt,
-    axes: (ltr, ttb),
-    {
-      for (name, ..args) in diagram.classifiers {
-        classifier.classifier(name, ..args)
-      }
-      for (a, b, kind, ..args) in diagram.edges {
-        edge.edge(a, b, kind, ..args)
+  let split-dict(dict, ..keys) = {
+    let keys = keys.pos()
+    let split = (:)
+    for key in keys {
+      if key in dict {
+        split.insert(key, dict.remove(key))
       }
     }
+    (split, dict)
+  }
+
+  _diagram.diagram(
+    classifiers: diagram.classifiers.map(((name, ..args)) => {
+      let ((pos: position, ..members), args) = split-dict(args, "pos", "attributes", "operations")
+      let members = (
+        ..if "attributes" in members {
+          members.attributes.map(((name, ..args)) => {
+            let (member-args, attribute-args) = split-dict(args, "visibility", "static")
+            classifier.member(..member-args, classifier.attribute(name, ..attribute-args))
+          })
+        },
+        classifier.divider(),
+        ..if "operations" in members {
+          members.operations.map(((name, ..args)) => {
+            let (member-args, operation-args) = split-dict(args, "visibility", "static", "abstract")
+            classifier.member(..member-args, classifier.operation(name, ..operation-args))
+          })
+        },
+      )
+      classifier.classifier(name, position: position, members: members, ..args)
+    }),
+    edges: diagram.edges.map(((a, b, kind, ..args)) => edge.edge(a, b, kind, ..args)),
   )
 }
