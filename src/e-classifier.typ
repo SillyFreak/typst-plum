@@ -156,10 +156,8 @@
   prefix: "@preview/plum,v1",
 
   template: it => {
-    let fields = e.fields(it)
+    let (kind, abstract) = (kind: "class", abstract: auto, ..e.fields(it))
 
-    let kind = fields.at("kind", default: "class")
-    let abstract = fields.at("abstract", default: auto)
     if abstract == auto { abstract = kind == "interface" }
 
     set grid(
@@ -225,6 +223,8 @@
 
   fields: (
     e.field("name", content, required: true),
+    e.field("id", e.types.union(auto, str, label), default: auto),
+    e.field("position", e.types.union(auto, e.types.any), default: auto),
     e.field("abstract", e.types.union(auto, bool), default: auto),
     e.field("final", bool, default: false),
     e.field("stereotypes", array, default: ()),

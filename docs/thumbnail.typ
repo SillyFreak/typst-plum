@@ -36,8 +36,8 @@ Bar (# bars: "List<Bar>" [0..*]) <--x-o Baz
 #grid(
   columns: (1fr, 1fr),
   column-gutter: 1em,
-  crudo.lines(diagram, "-12"),
-  crudo.lines(diagram, "14-"),
+  crudo.lines(diagram, "-11"),
+  crudo.lines(diagram, "13-"),
 )
 
 // #plum.parse(diagram)
@@ -47,27 +47,45 @@ Bar (# bars: "List<Bar>" [0..*]) <--x-o Baz
 #import plum.elembic as e
 #import plum.e-classifier: classifier, name, member, divider, attribute, operation
 
-#show: e.show_(classifier, it => { set text(font: ("FreeSans",), size: 0.8em); it })
-
 #show: e.cond-set(classifier.with(name: [Foo]), fill: gray)
-// #show: e.set_(classifier, visibility-width: 2em)
 
-#classifier(
-  "Foo",
-  kind: "interface",
-  // empty-sections: false,
-  members: (
-    member(visibility: "+", static: true, attribute(
-      multiplicity: [1],
-      modifiers: ("readOnly",),
-      "attr",
-    )),
-    divider(),
-    member(visibility: "-", abstract: true, operation(
-      "op",
-      return-type: "bool",
-      parameters: ((name: "b", type: "Bar"),),
-    )),
-    member[#h(2cm)#v(2cm)],
-  ),
-)
+#[
+  #show: e.show_(classifier, it => { set text(font: ("FreeSans",), size: 0.8em); it })
+  // #show: e.set_(classifier, visibility-width: 2em)
+
+  #classifier(
+    "Foo",
+    kind: "interface",
+    // empty-sections: false,
+    members: (
+      member(visibility: "+", static: true, attribute(
+        multiplicity: [1],
+        modifiers: ("readOnly",),
+        "attr",
+      )),
+      divider(),
+      member(visibility: "-", abstract: true, operation(
+        "op",
+        return-type: "bool",
+        parameters: ((name: "b", type: "Bar"),),
+      )),
+      member[#h(2cm)#v(2cm)],
+    ),
+  )
+]
+
+#[
+  #let (classifiers, edges) = plum.parse(diagram)
+  #import plum.e-diagram: diagram
+
+  #show: e.show_(diagram, it => { set text(font: ("FreeSans",), size: 0.8em); it })
+
+  #align(center, diagram(
+    classifiers: (
+      classifier("Foo", id: <X>, position: (0, 1)),
+      classifier("Baz", position: (2, 1)),
+      classifier("Bar", position: (1, 0)),
+    ),
+    edges: edges,
+  ))
+]

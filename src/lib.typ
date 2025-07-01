@@ -4,6 +4,7 @@
 
 #import "imports.typ": elembic
 #import "e-classifier.typ"
+#import "e-diagram.typ"
 
 #let _p = plugin("parser.wasm")
 
