@@ -43,3 +43,31 @@ Bar (# bars: "List<Bar>" [0..*]) <--x-o Baz
 // #plum.parse(diagram)
 
 #align(center, plum.plum(diagram))
+
+#import plum.elembic as e
+#import plum.e-classifier: classifier, name, member, divider, attribute, operation
+
+#show: e.show_(classifier, it => { set text(font: ("FreeSans",), size: 0.8em); it })
+
+#show: e.cond-set(classifier.with(name: [Foo]), fill: gray)
+// #show: e.set_(classifier, visibility-width: 2em)
+
+#classifier(
+  "Foo",
+  kind: "interface",
+  // empty-sections: false,
+  members: (
+    member(visibility: "+", static: true, attribute(
+      multiplicity: [1],
+      modifiers: ("readOnly",),
+      "attr",
+    )),
+    divider(),
+    member(visibility: "-", abstract: true, operation(
+      "op",
+      return-type: "bool",
+      parameters: ((name: "b", type: "Bar"),),
+    )),
+    member[#h(2cm)#v(2cm)],
+  ),
+)

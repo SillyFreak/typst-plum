@@ -2,6 +2,9 @@
 #import "edge.typ" as edge: MARKS, add-marks
 #import "package.typ"
 
+#import "imports.typ": elembic
+#import "e-classifier.typ"
+
 #let _p = plugin("parser.wasm")
 
 /// Parses a diagram via a WASM plugin.
