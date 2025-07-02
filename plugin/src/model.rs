@@ -46,7 +46,7 @@ pub enum Meta {
 impl Meta {
     pub fn name(&self) -> &'static str {
         match self {
-            Self::Position(_, _) => "pos",
+            Self::Position(_, _) => "position",
             Self::Via(_) => "via",
             Self::Bend(_) => "bend",
         }

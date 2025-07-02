@@ -70,7 +70,7 @@
 
   diagram.diagram(
     classifiers: src.classifiers.map(((name, ..args)) => {
-      let ((pos: position, ..members), args) = split-dict(args, "pos", "attributes", "operations")
+      let (members, args) = split-dict(args, "attributes", "operations")
       let members = (
         ..if "attributes" in members {
           members.attributes.map(((name, ..args)) => {
@@ -86,7 +86,7 @@
           })
         },
       )
-      classifier.classifier(name, position: position, members: members, ..args)
+      classifier.classifier(name, members: members, ..args)
     }),
     edges: src.edges.map(((a, b, kind, ..args)) => edge.edge(a, b, kind, ..args)),
   )
