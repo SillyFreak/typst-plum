@@ -30,7 +30,7 @@ interface Bar
 #[bend(45deg)]
 X ..|> Bar
 #[via((1, 0.4), (2, 0.4))]
-Bar (# bars: "List<Bar>" [0..*]) <--x-o Baz
+Bar (# bars: "List<Bar>" [0..*]) <--x-* Baz
 ```
 
 #grid(
@@ -42,15 +42,17 @@ Bar (# bars: "List<Bar>" [0..*]) <--x-o Baz
 
 // #plum.parse(diagram-src)
 
-#import plum: elembic as e, diagram.diagram, classifier.classifier
+#import plum: elembic as e, diagram.diagram, classifier.classifier, edge.edge
 
-#show: if theme == "dark" {
-  e.set_(classifier, stroke: white)
-} else {
-  it => it
+#show: it => {
+  if theme != "dark" { return it }
+  show: e.set_(classifier, stroke: white)
+  show: e.set_(edge, stroke: white)
+  it
 }
 
-#show: e.show_(diagram, it => { set text(font: ("FreeSans",), size: 0.8em); it })
-#show: e.cond-set(classifier.with(name: [Foo]), fill: gray)
+#show: e.show_(diagram, it => { set text(font: ("FreeSans",)); it })
+// #show: e.set_(classifier, empty-sections: false)
+#show: e.cond-set(classifier.with(name: [Foo]), fill: if theme == "dark" { gray.darken(50%) } else { gray.lighten(50%) })
 
 #align(center, plum.plum(diagram-src))

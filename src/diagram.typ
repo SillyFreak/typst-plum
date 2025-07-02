@@ -8,24 +8,24 @@
   //   it
   // },
 
-  display: it => {
-    import "imports.typ": fletcher.diagram
+  display: it => e.get(get => {
+    import "imports.typ": fletcher
     import "classifier.typ" as classifier
     import "edge.typ" as edge
 
-    diagram(
+    fletcher.diagram(
       node-inset: 0pt,
       axes: (ltr, ttb),
       {
         for x in it.classifiers {
-          classifier.to-fletcher(x)
+          classifier.to-fletcher(x, get)
         }
         for x in it.edges {
-          edge.to-fletcher(x)
+          edge.to-fletcher(x, get)
         }
       }
     )
-  },
+  }),
 
   fields: (
     e.field("classifiers", array, default: ()),

@@ -5,7 +5,7 @@
   "plum->": (inherit: "straight", sharpness: 30deg, size: 14),
   "plum-x": (inherit: "x", size: 7),
   "plum-o": (inherit: "stealth", angle: 30deg, stealth: -1, size: 10, fill: none),
-  "plum-*": (inherit: "plum-o", fill: black),
+  "plum-*": (inherit: "plum-o", fill: auto),
 )
 
 #let add-marks() = {
@@ -32,17 +32,20 @@
     e.field("kind", dictionary, required: true),
     e.field("via", array, default: ()),
     e.field("bend", e.types.option(float), default: none),
+
+    // styling
+    e.field("stroke", e.types.option(stroke), default: 0.3pt),
   ),
 )
 
-#let to-fletcher(it) = {
-  import "imports.typ": fletcher.edge
+#let to-fletcher(it, get) = {
+  import "imports.typ": fletcher
 
-  let (a, b, kind, via, bend) = (via: (), bend: none, ..e.fields(it))
+  let (a, b, kind, via, bend, stroke) = (: ..get(edge), ..e.fields(it))
   if type(a) == str { a = label(a) }
   if type(b) == str { b = label(b) }
 
-  let opts = (dash: none, marks: ())
+  let opts = (stroke: stroke, dash: none, marks: ())
 
   if kind.type in ("realization", "dependency") {
     opts.dash = "densely-dashed"
@@ -71,8 +74,8 @@
       // the mark at the end indicating aggregation or navigability
       let mark = {
         if nav == true { "plum->" }
-        else if agg == "aggregate" {"plum-o" }
-        else if agg == "composite" {"plum-*" }
+        else if agg == "aggregate" { "plum-o" }
+        else if agg == "composite" { "plum-*" }
       }
       if mark != none {
         marks.push((
@@ -102,10 +105,10 @@
     opts.bend = bend * 1rad
   }
 
-  edge(a, ..via, b, ..opts)
+  fletcher.edge(a, ..via, b, ..opts)
   if kind.type in ("association",) {
     let fake-edge(pos, side, label) = {
-      edge(
+      fletcher.edge(
         a, ..via, b,
         ..opts,
         stroke: none,

@@ -237,10 +237,10 @@
   )
 )
 
-#let to-fletcher(it) = {
-  import "imports.typ": fletcher.node
+#let to-fletcher(it, get) = {
+  import "imports.typ": fletcher
 
-  let (name, id, position) = (id: auto, position: auto, ..e.fields(it))
+  let (name, id, position) = (: ..get(classifier), ..e.fields(it))
   if id == auto {
     assert(type(name) == content and name.func() == text)
     id = name.text
@@ -249,5 +249,5 @@
 
   assert.ne(position, auto, message: "automatic positioning is currently not supported. add #[pos(x, y)] to each classifier")
 
-  node(position, it, name: id, shape: "rect")
+  fletcher.node(position, it, name: id, shape: "rect")
 }
