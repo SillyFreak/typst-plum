@@ -54,8 +54,6 @@
   /// -> str | content
   diagram,
 ) = {
-  set text(font: ("FreeSans",), size: 0.8em)
-
   let diagram = parse(diagram)
 
   let split-dict(dict, ..keys) = {
