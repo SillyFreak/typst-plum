@@ -2,7 +2,7 @@
   "plum-|>": (inherit: "stealth", angle: 30deg, stealth: 0, size: 14, fill: none),
   "plum->": (inherit: "straight", sharpness: 30deg, size: 14),
   "plum-x": (inherit: "x", size: 7),
-  "plum-o": (inherit: "stealth", angle: 30deg, stealth: -1, size: 10, fill: white),
+  "plum-o": (inherit: "stealth", angle: 30deg, stealth: -1, size: 10, fill: none),
   "plum-*": (inherit: "plum-o", fill: black),
 )
 
@@ -51,25 +51,29 @@
       let nav = end.at("navigable", default: none)
       let agg = end.at("aggregation", default: none)
 
+      let pos = (pos: if side == "a" { 0 } else { 1 })
+      let rev = if side == "b" { (rev: true) }
+
+      let marks = ()
       // the mark at the end indicating aggregation or navigability
-      let mark = if nav == true {
-        "plum->"
-      } else if agg == "aggregate" {
-        "plum-o"
-      } else if agg == "composite" {
-        "plum-*"
+      let mark = {
+        if nav == true { "plum->" }
+        else if agg == "aggregate" {"plum-o" }
+        else if agg == "composite" {"plum-*" }
+      }
+      if mark != none {
+        marks.push((inherit: mark, ..pos))
       }
       // the non-navigability is a bit inside the line, further for aggregations
-      let x-mark = if nav == false {
-        let x-mark = (inherit: "plum-x")
-        x-mark.extrude = (if mark != none { 27 } else { 10 },)
-        x-mark += if side == "a" { (pos: 0) } else { (pos: 1, rev: true) }
-        (x-mark,)
+      if nav == false {
+        let extrude = if marks.len() != 0 { 27 } else { 10 }
+        marks.push((inherit: "plum-x", ..pos, ..rev, extrude: (extrude,)))
       }
-      (..x-mark, mark)
+
+      marks
     }
 
-    opts.marks += marks(a, "a").rev()
+    opts.marks += marks(a, "a")
     opts.marks += marks(b, "b")
   }
 
