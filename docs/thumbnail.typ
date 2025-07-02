@@ -7,8 +7,6 @@
 #let theme = sys.inputs.at("theme", default: "light")
 #set text(white) if theme == "dark"
 
-#set text(0.85em)
-
 #plum.add-marks()
 
 #let diagram-src = ```

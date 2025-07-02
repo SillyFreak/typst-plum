@@ -29,7 +29,7 @@ abstract class Baz {
 #[bend(45deg)]
 X ..|> Bar
 #[via((1, 0.4), (2, 0.4))]
-Bar <--x-o Baz
+Bar <--x-* Baz
 ```
 
 #import plum: elembic as e, classifier.classifier
