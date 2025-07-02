@@ -88,6 +88,23 @@
       )
       classifier.classifier(name, members: members, ..args)
     }),
-    edges: src.edges.map(((a, b, kind, ..args)) => edge.edge(a, b, kind, ..args)),
+    edges: src.edges.map(((a, b, kind, ..args)) => {
+      if kind.type == "association" {
+        let map-role(role) = {
+          if role == none { return none }
+          let (name, multiplicity, ..role) = (multiplicity: none, ..role)
+          let result = (
+            role: edge.association-end-role(name, ..role)
+          )
+          if multiplicity != none {
+            result.multiplicity = edge.association-end-multiplicity(multiplicity)
+          }
+          result
+        }
+        kind.a += map-role(kind.a.remove("role", default: none))
+        kind.b += map-role(kind.b.remove("role", default: none))
+      }
+      edge.edge(a, b, kind, ..args)
+    }),
   )
 }

@@ -14,6 +14,68 @@
   fletcher.MARKS.update(marks => (: ..marks, ..MARKS))
 }
 
+#let association-end-multiplicity = e.element.declare(
+  "association-end-multiplicity",
+  prefix: "@preview/plum,v1",
+
+  template: it => {
+    set text(0.8em)
+    it
+  },
+
+  display: it => {
+    it.multiplicity
+  },
+
+  fields: (
+    e.field("multiplicity", content, required: true),
+  ),
+)
+
+#let association-end-role = e.element.declare(
+  "association-end-role",
+  prefix: "@preview/plum,v1",
+
+  template: it => {
+    set text(0.8em)
+    it
+  },
+
+  display: it => {
+    let (name, visibility, static, type, modifiers) = it
+
+    show: if static { underline } else { it => it }
+
+    let modifier(m) = {
+      if std.type(m) == str {
+        m
+      } else if "redefines" in m {
+        [redefines #m.redefines]
+      } else if "subsets" in m {
+        [subsets #m.redefines]
+      } else if "constraint" in m {
+        m.constraint
+      } else {
+        panic("unknown modifier: " + repr(m))
+      }
+    }
+
+
+    if visibility != none [#visibility~]
+    name
+    if type != none [: #type]
+    if modifiers != () [ {#modifiers.map(modifier).join[, ]}]
+  },
+
+  fields: (
+    e.field("name", content, required: true),
+    e.field("visibility", content, default: none),
+    e.field("static", bool, default: false),
+    e.field("type", e.types.option(content), default: none),
+    e.field("modifiers", array, default: ()),
+  ),
+)
+
 #let edge = e.element.declare(
   "edge",
   prefix: "@preview/plum,v1",
@@ -119,28 +181,19 @@
       )
     }
 
-    let fake-edges(pos, visibility: none, static: false, name: none, type: none, multiplicity: none) = {
-      assert(not static, message: "static edges are not allowed")
-      fake-edge(pos, left, {
-        set text(0.8em)
-        if visibility != none [#visibility ]
-        name
-        if type != none [: #type]
-      })
+    let fake-edges(pos, multiplicity, role) = {
+      fake-edge(pos, left, role)
       if multiplicity != none {
-        fake-edge(pos, right, {
-          set text(0.8em)
-          multiplicity
-        })
+        fake-edge(pos, right, multiplicity)
       }
     }
 
     let (a, b) = kind
     if "role" in a {
-      fake-edges(5pt, ..a.role)
+      fake-edges(5pt, a.at("multiplicity", default: none), a.role)
     }
     if "role" in b {
-      fake-edges(100% - 5pt, ..b.role)
+      fake-edges(100% - 5pt, b.at("multiplicity", default: none), b.role)
     }
   }
 }
