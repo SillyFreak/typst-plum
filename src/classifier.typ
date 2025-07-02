@@ -111,8 +111,8 @@
 
   fields: (
     e.field("name", content, required: true),
-    e.field("type", e.types.union(none, content), default: none),
-    e.field("multiplicity", e.types.union(none, content), default: none),
+    e.field("type", e.types.option(content), default: none),
+    e.field("multiplicity", e.types.option(content), default: none),
     e.field("modifiers", array, default: ()),
   ),
 )
@@ -146,7 +146,7 @@
   fields: (
     e.field("name", content, required: true),
     e.field("parameters", array, default: ()),
-    e.field("return-type", e.types.union(none, content), default: none),
+    e.field("return-type", e.types.option(content), default: none),
   ),
 )
 
@@ -165,11 +165,7 @@
       inset: 0.3em,
     )
 
-    show: if abstract {
-      e.show_(name, it => { set text(style: "italic"); it })
-    } else {
-      it => it
-    }
+    show e.selector(name): set text(style: "italic") if abstract
 
     it
   },
@@ -224,8 +220,8 @@
   fields: (
     e.field("name", content, required: true),
     e.field("id", e.types.union(auto, str, label), default: auto),
-    e.field("position", e.types.union(auto, e.types.any), default: auto),
-    e.field("abstract", e.types.union(auto, bool), default: auto),
+    e.field("position", e.types.smart(e.types.any), default: auto),
+    e.field("abstract", e.types.smart(bool), default: auto),
     e.field("final", bool, default: false),
     e.field("stereotypes", array, default: ()),
     e.field("kind", str, default: "class"),
@@ -235,7 +231,7 @@
     e.field("visibility-width", length, default: 0.8em),
     e.field("empty-sections", bool, default: true),
 
-    e.field("stroke", e.types.union(none, stroke), default: 0.5pt),
+    e.field("stroke", e.types.option(stroke), default: 0.5pt),
     e.field("fill", e.types.union(none, color, gradient, tiling), default: none),
     e.field("radius", e.types.union(relative, dictionary), default: 2pt),
   )

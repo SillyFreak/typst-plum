@@ -31,7 +31,7 @@
     e.field("b", e.types.union(str, label), required: true),
     e.field("kind", dictionary, required: true),
     e.field("via", array, default: ()),
-    e.field("bend", e.types.union(none, float), default: none),
+    e.field("bend", e.types.option(float), default: none),
   ),
 )
 
