@@ -8,7 +8,6 @@
 #import "edge.typ"
 
 #let _p = plugin("parser.wasm")
-#let _diagram = diagram
 
 /// Parses a diagram via a WASM plugin.
 ///
@@ -26,20 +25,22 @@
 #let parse(
   /// the expression to parse; may be a `raw` element
   /// -> str | content
-  diagram,
+  src,
 ) = {
   // Typst 0.13: `cbor.decode` is deprecated, directly pass bytes to `cbor` instead
   let decode = if sys.version < version(0, 13, 0) { cbor.decode } else { cbor }
 
-  if type(diagram) == content and diagram.func() == raw {
-    diagram = diagram.text
+  if type(src) == content and src.func() == raw {
+    src = src.text
   }
-  decode(_p.parse(cbor.encode(diagram)))
+  decode(_p.parse(cbor.encode(src)))
 }
 
 /// Parses and processes a diagram.
 ///
 /// #example(mode: "markup", dir: ttb, ````typ
+/// >>> #import plum: elembic as e, diagram.diagram
+/// >>> #show: e.show_(diagram, it => { set text(0.8em, font: ("FreeSans",)); it })
 /// #plum.plum(```plum
 ///   #[pos(0, 0)]
 ///   interface Bar
@@ -52,9 +53,9 @@
 #let plum(
   /// the expression to parse; may be a `raw` element
   /// -> str | content
-  diagram,
+  src,
 ) = {
-  let diagram = parse(diagram)
+  let src = parse(src)
 
   let split-dict(dict, ..keys) = {
     let keys = keys.pos()
@@ -67,8 +68,8 @@
     (split, dict)
   }
 
-  _diagram.diagram(
-    classifiers: diagram.classifiers.map(((name, ..args)) => {
+  diagram.diagram(
+    classifiers: src.classifiers.map(((name, ..args)) => {
       let ((pos: position, ..members), args) = split-dict(args, "pos", "attributes", "operations")
       let members = (
         ..if "attributes" in members {
@@ -87,6 +88,6 @@
       )
       classifier.classifier(name, position: position, members: members, ..args)
     }),
-    edges: diagram.edges.map(((a, b, kind, ..args)) => edge.edge(a, b, kind, ..args)),
+    edges: src.edges.map(((a, b, kind, ..args)) => edge.edge(a, b, kind, ..args)),
   )
 }
