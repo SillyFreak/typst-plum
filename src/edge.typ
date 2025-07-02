@@ -83,7 +83,7 @@
       edge(
         a, ..via, b,
         ..opts,
-        stroke: black.transparentize(100%),
+        stroke: none,
         marks: (),
         label: label,
         label-pos: pos,
