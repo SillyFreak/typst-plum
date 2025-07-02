@@ -16,9 +16,12 @@
 /// ```)
 /// ````)
 ///
-/// - diagram (str): the expression to parse
 /// -> dict
-#let parse(diagram) = {
+#let parse(
+  /// the expression to parse; may be a `raw` element
+  /// -> str | content
+  diagram,
+) = {
   // Typst 0.13: `cbor.decode` is deprecated, directly pass bytes to `cbor` instead
   let decode = if sys.version < version(0, 13, 0) { cbor.decode } else { cbor }
 
@@ -39,9 +42,12 @@
 /// ```)
 /// ````)
 ///
-/// - diagram (str): the expression to parse
-/// -> dict
-#let plum(diagram) = {
+/// -> content
+#let plum(
+  /// the expression to parse; may be a `raw` element
+  /// -> str | content
+  diagram,
+) = {
   import "imports.typ": fletcher
 
   set text(font: ("FreeSans",), size: 0.8em)
