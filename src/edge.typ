@@ -110,10 +110,10 @@
 
     let (a, b) = kind
     if "role" in a {
-      fake-edges(0.15, ..a.role)
+      fake-edges(5pt, ..a.role)
     }
     if "role" in b {
-      fake-edges(0.85, ..b.role)
+      fake-edges(100% - 5pt, ..b.role)
     }
   }
 }
