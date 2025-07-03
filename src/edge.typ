@@ -52,7 +52,6 @@
       let agg = end.at("aggregation", default: none)
 
       let pos = (pos: if side == "a" { 0 } else { 1 })
-      let rev = if side == "b" { (rev: true) }
 
       let marks = ()
       // the mark at the end indicating aggregation or navigability
@@ -62,12 +61,20 @@
         else if agg == "composite" {"plum-*" }
       }
       if mark != none {
-        marks.push((inherit: mark, ..pos))
+        marks.push((
+          inherit: mark,
+          ..pos,
+          rev: side == "a",
+        ))
       }
       // the non-navigability is a bit inside the line, further for aggregations
       if nav == false {
-        let extrude = if marks.len() != 0 { 27 } else { 10 }
-        marks.push((inherit: "plum-x", ..pos, ..rev, extrude: (extrude,)))
+        marks.push((
+          inherit: "plum-x",
+          ..pos,
+          rev: side == "b",
+          extrude: (if marks.len() != 0 { 27 } else { 10 },),
+        ))
       }
 
       marks
