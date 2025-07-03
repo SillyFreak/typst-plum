@@ -14,7 +14,7 @@ repository = "https://github.com/SillyFreak/typst-plum"
 keywords = ["software", "uml", "class-diagram"]
 categories = ["visualization"]
 disciplines = ["computer-science"]
-# compiler = ""
+compiler = "0.13.0"
 exclude = [
   ".github",
   "docs",
