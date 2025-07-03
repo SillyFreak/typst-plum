@@ -40,7 +40,7 @@ Bar (# bars: "List<Bar>" [0..*]) <--x-* Baz
 
 // #plum.parse(diagram-src)
 
-#import plum: elembic as e, diagram.diagram, classifier.classifier, edge.edge
+#import plum: elembic as e, diagram, classifier, edge
 
 #show: it => {
   if theme != "dark" { return it }

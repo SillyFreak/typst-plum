@@ -2,7 +2,7 @@
 
 #set page(width: auto, height: auto, margin: 5mm)
 
-#plum.edge.add-marks()
+#plum.add-marks()
 
 #plum.plum(```plum
 #[pos(0, 0)]
