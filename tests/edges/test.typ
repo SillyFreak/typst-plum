@@ -14,7 +14,7 @@ class B
 A ..> B
 #[bend(-30deg)]
 B <.. A
-//A .. B
+A .. B
 #[bend(-30deg)]
 A <.. B
 #[bend(60deg)]
@@ -51,7 +51,6 @@ class B
 A ..|> B
 #[bend(-30deg)]
 B <|.. A
-//A .. B
 #[bend(-30deg)]
 A <|.. B
 #[bend(60deg)]

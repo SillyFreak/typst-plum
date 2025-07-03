@@ -45,7 +45,7 @@ pub enum EdgeKind<'input> {
         direction: Direction,
     },
     Dependency {
-        direction: Direction,
+        direction: Option<Direction>,
         #[serde(skip_serializing_if = "Option::is_none")]
         name: Option<&'input str>,
     },
@@ -67,11 +67,15 @@ impl fmt::Display for EdgeKind<'_> {
             Self::Generalization { direction: D::AToB } => write!(f, "--|>"),
             Self::Generalization { direction: D::BToA } => write!(f, "<|--"),
             Self::Dependency {
-                direction: D::AToB,
+                direction: None,
+                name,
+            } => write!(f, ".{}.", name.unwrap_or_default()),
+            Self::Dependency {
+                direction: Some(D::AToB),
                 name,
             } => write!(f, ".{}.>", name.unwrap_or_default()),
             Self::Dependency {
-                direction: D::BToA,
+                direction: Some(D::BToA),
                 name,
             } => write!(f, "<.{}.", name.unwrap_or_default()),
             Self::Association { name, a, b } => {

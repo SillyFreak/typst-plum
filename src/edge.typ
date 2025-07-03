@@ -41,10 +41,12 @@
     }
     opts.marks.push("plum-|>")
   } else if kind.type in ("dependency",) {
-    if kind.direction == "a-to-b" {
-      opts.marks.push(none)
+    if kind.direction != none {
+      if kind.direction == "a-to-b" {
+        opts.marks.push(none)
+      }
+      opts.marks.push("plum->")
     }
-    opts.marks.push("plum->")
   } else if kind.type in ("association",) {
     let (a, b) = kind
     let marks(end, side) = {
