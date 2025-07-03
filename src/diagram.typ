@@ -1,7 +1,11 @@
 #import "imports.typ": elembic as e
 
+/// A custom element representing a plum diagram
+///
+/// #elem-fields(plum.elembic, plum.diagram)
 #let diagram = e.element.declare(
   "diagram",
+  doc: "A custom element representing a plum diagram",
   prefix: "@preview/plum,v1",
 
   // template: it => {
@@ -28,7 +32,7 @@
   }),
 
   fields: (
-    e.field("classifiers", array, default: ()),
-    e.field("edges", array, default: ()),
+    e.field("classifiers", array, default: (), doc: "the classes, interfaces, etc. in the diagram"),
+    e.field("edges", array, default: (), doc: "the dependencies, associations, etc. in the diagram"),
   ),
 )

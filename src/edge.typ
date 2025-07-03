@@ -1,5 +1,8 @@
 #import "imports.typ": elembic as e
 
+/// The custom Fletcher marks that Plum defines; can be registered by calling @@add-marks().
+///
+/// -> dictionary
 #let MARKS = (
   "plum-|>": (inherit: "stealth", angle: 30deg, stealth: 0, size: 14, fill: none),
   "plum->": (inherit: "straight", sharpness: 30deg, size: 14),
@@ -8,12 +11,30 @@
   "plum-*": (inherit: "plum-o", fill: auto),
 )
 
+/// addd plum-specific marks to Fletcher
+///
+/// -> content
 #let add-marks() = {
   import "imports.typ": fletcher
 
   fletcher.MARKS.update(marks => (: ..marks, ..MARKS))
 }
 
+/// A multiplicity specifier on one end of an association.
+///
+/// #block(breakable: false, example(mode: "markup", dir: ltr, ratio: 1.5, ````typ
+/// >>> #import plum: elembic as e, diagram, association-end-multiplicity
+/// >>> #show: e.show_(diagram, it => { set text(0.8em, font: ("FreeSans",)); it })
+/// #show: e.show_(association-end-multiplicity,
+///   it => { set text(gray); it })
+/// #plum.plum(```
+/// #[pos(0, 0)] class Foo
+/// #[pos(1, 0)] class Bar
+/// Foo (x [1]) <-- Bar
+/// ```)
+/// ````))
+///
+/// #elem-fields(plum.elembic, plum.association-end-multiplicity)
 #let association-end-multiplicity = e.element.declare(
   "association-end-multiplicity",
   prefix: "@preview/plum,v1",
@@ -28,10 +49,25 @@
   },
 
   fields: (
-    e.field("multiplicity", content, required: true),
+    e.field("multiplicity", content, required: true, doc: "the multiplicity of the association end"),
   ),
 )
 
+/// A role specifier on one end of an association.
+///
+/// #block(breakable: false, example(mode: "markup", dir: ltr, ratio: 1.5, ````typ
+/// >>> #import plum: elembic as e, diagram, association-end-role
+/// >>> #show: e.show_(diagram, it => { set text(0.8em, font: ("FreeSans",)); it })
+/// #show: e.show_(association-end-role,
+///   it => { set text(weight: "bold"); it })
+/// #plum.plum(```
+/// #[pos(0, 0)] class Foo
+/// #[pos(1, 0)] class Bar
+/// Foo (x [1]) <-- Bar
+/// ```)
+/// ````))
+///
+/// #elem-fields(plum.elembic, plum.association-end-role)
 #let association-end-role = e.element.declare(
   "association-end-role",
   prefix: "@preview/plum,v1",
@@ -68,14 +104,28 @@
   },
 
   fields: (
-    e.field("name", content, required: true),
-    e.field("visibility", content, default: none),
-    e.field("static", bool, default: false),
-    e.field("type", e.types.option(content), default: none),
-    e.field("modifiers", array, default: ()),
+    e.field("name", content, required: true, doc: "the role name of the association end"),
+    e.field("visibility", content, default: none, doc: "the visibility of the association"),
+    e.field("static", bool, default: false, doc: "whether this is a static association (technically invalid)"),
+    e.field("type", e.types.option(content), default: none, doc: "the data type of the association"),
+    e.field("modifiers", array, default: (), doc: "modifiers such as readOnly or invariants"),
   ),
 )
 
+/// An edge between two @@classifier;s; can represent associations, dependencies, etc.
+///
+/// #block(breakable: false, example(mode: "markup", dir: ltr, ratio: 1.5, ````typ
+/// >>> #import plum: elembic as e, diagram, edge
+/// >>> #show: e.show_(diagram, it => { set text(0.8em, font: ("FreeSans",)); it })
+/// #show: e.set_(edge, stroke: blue+0.5pt)
+/// #plum.plum(```
+/// #[pos(0, 0)] class Foo
+/// #[pos(1, 0)] class Bar
+/// Foo <|-- Bar
+/// ```)
+/// ````))
+///
+/// #elem-fields(plum.elembic, plum.edge)
 #let edge = e.element.declare(
   "edge",
   prefix: "@preview/plum,v1",
@@ -89,14 +139,14 @@
   },
 
   fields: (
-    e.field("a", e.types.union(str, label), required: true),
-    e.field("b", e.types.union(str, label), required: true),
-    e.field("kind", dictionary, required: true),
-    e.field("via", array, default: ()),
-    e.field("bend", e.types.option(float), default: none),
+    e.field("a", e.types.union(str, label), required: true, doc: "the ID (or name) of the first edge end"),
+    e.field("b", e.types.union(str, label), required: true, doc: "the ID (or name) of the second edge end"),
+    e.field("kind", dictionary, required: true, doc: "a dictionary with more information on the edge; at minimum, the type must be defined"),
+    e.field("via", array, default: (), doc: "an array of coordinates through which the edge should go (instead of a straight line)"),
+    e.field("bend", e.types.option(float), default: none, doc: "an angle by which to bend the edge (instead of a straight line)"),
 
     // styling
-    e.field("stroke", e.types.option(stroke), default: 0.3pt),
+    e.field("stroke", e.types.option(stroke), default: 0.3pt, doc: "the stroke to use for the edge"),
   ),
 )
 

@@ -206,3 +206,19 @@
     })
   )
 }
+
+#let elem-fields(e, elem) = [
+  *Fields:*
+
+  #for (arg-name, info) in e.data(elem).user-fields {
+    (man-style.show-parameter-block)(
+      arg-name, (info.typeinfo.name,), info.doc,
+      (
+        style: man-style,
+        break-param-descriptions: false,
+      ),
+      show-default: not info.required,
+      default: repr(info.at("default", default: none)),
+    )
+  }
+]

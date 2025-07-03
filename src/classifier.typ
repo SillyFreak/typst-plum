@@ -1,5 +1,17 @@
 #import "imports.typ": elembic as e
 
+/// The element that shows stereotypes above a classifiers name.
+///
+/// #block(breakable: false, example(mode: "markup", dir: ltr, ratio: 1.5, ````typ
+/// >>> #import plum: elembic as e, diagram, stereotypes
+/// >>> #show: e.show_(diagram, it => { set text(0.8em, font: ("FreeSans",)); it })
+/// #show: e.show_(stereotypes, it => {
+///   set text(gray.darken(40%)); it
+/// })
+/// #plum.plum("#[pos(0, 0)] interface Foo")
+/// ````))
+///
+/// #elem-fields(plum.elembic, plum.stereotypes)
 #let stereotypes = e.element.declare(
   "stereotypes",
   prefix: "@preview/plum,v1",
@@ -16,10 +28,22 @@
   },
 
   fields: (
-    e.field("children", array, required: true),
+    e.field("children", array, required: true, doc: "the stereotypes of the classifier"),
   ),
 )
 
+/// The element that shows a classifiers name.
+///
+/// #block(breakable: false, example(mode: "markup", dir: ltr, ratio: 1.5, ````typ
+/// >>> #import plum: elembic as e, diagram, name
+/// >>> #show: e.show_(diagram, it => { set text(0.8em, font: ("FreeSans",)); it })
+/// #show: e.show_(name, it => {
+///   set text(weight: "bold"); it
+/// })
+/// #plum.plum("#[pos(0, 0)] interface Foo")
+/// ````))
+///
+/// #elem-fields(plum.elembic, plum.name)
 #let name = e.element.declare(
   "name",
   prefix: "@preview/plum,v1",
@@ -35,10 +59,29 @@
   },
 
   fields: (
-    e.field("body", content, required: true),
+    e.field("body", content, required: true, doc: "the name of the classifier"),
   ),
 )
 
+/// A member entry of a classifier. Usually, this will contain an @@attribute or @@operation.
+///
+/// The member element shows the visibility modifier and styles the text according to the `static`
+/// and `abstract` fields.
+///
+/// #block(breakable: false, example(mode: "markup", dir: ltr, ratio: 1.5, ````typ
+/// >>> #import plum: elembic as e, diagram, member
+/// >>> #show: e.show_(diagram, it => { set text(0.8em, font: ("FreeSans",)); it })
+/// #show: e.show_(member, it => {
+///   set text(weight: "bold"); it
+/// })
+/// #plum.plum(```
+/// #[pos(0, 0)] class Foo {
+///   - static x: int
+///   + abstract y()
+/// }```)
+/// ````))
+///
+/// #elem-fields(plum.elembic, plum.member)
 #let member = e.element.declare(
   "member",
   prefix: "@preview/plum,v1",
@@ -67,17 +110,36 @@
   },
 
   fields: (
-    e.field("body", content, required: true),
-    e.field("visibility", content, default: none),
-    e.field("static", bool, default: false),
-    e.field("abstract", bool, default: false),
+    e.field("body", content, required: true, doc: "usually an attribute or operation"),
+    e.field("visibility", content, default: none, doc: "the visibility modifier"),
+    e.field("static", bool, default: false, doc: "the member is underlined if true"),
+    e.field("abstract", bool, default: false, doc: "the member is italicized if true"),
 
-    e.field("visibility-width", length, named: true, internal: true),
+    e.field("visibility-width", length, named: true, internal: true, doc: "the width of the visibility modifier for alignment"),
   ),
 )
 
+/// A divider separating sections in a classifier; usually between @@attribute;s and @@operation;s.
+///
+/// -> content
 #let divider() = grid.hline()
 
+/// An attribute. Usually, this will be contained in a @@member.
+///
+/// #block(breakable: false, example(mode: "markup", dir: ltr, ratio: 1.5, ````typ
+/// >>> #import plum: elembic as e, diagram, attribute
+/// >>> #show: e.show_(diagram, it => { set text(0.8em, font: ("FreeSans",)); it })
+/// #show: e.show_(attribute.with(name: [y]), it=>{
+///   rect(width: 5cm) // fill in the blanks
+/// })
+/// #plum.plum(```
+/// #[pos(0, 0)] class Foo {
+///   - x: int [1] {readOnly}
+///   - y: int
+/// }```)
+/// ````))
+///
+/// #elem-fields(plum.elembic, plum.attribute)
 #let attribute = e.element.declare(
   "attribute",
   prefix: "@preview/plum,v1",
@@ -110,13 +172,29 @@
   },
 
   fields: (
-    e.field("name", content, required: true),
-    e.field("type", e.types.option(content), default: none),
-    e.field("multiplicity", e.types.option(content), default: none),
-    e.field("modifiers", array, default: ()),
+    e.field("name", content, required: true, doc: "the name of the attribute"),
+    e.field("type", e.types.option(content), default: none, doc: "the data type of the attribute"),
+    e.field("multiplicity", e.types.option(content), default: none, doc: "how many values the attribute contains"),
+    e.field("modifiers", array, default: (), doc: "modifiers such as readOnly or invariants"),
   ),
 )
 
+/// An operation. Usually, this will be contained in a @@member.
+///
+/// #block(breakable: false, example(mode: "markup", dir: ltr, ratio: 1.5, ````typ
+/// >>> #import plum: elembic as e, diagram, operation
+/// >>> #show: e.show_(diagram, it => { set text(0.8em, font: ("FreeSans",)); it })
+/// #show: e.show_(operation.with(name: [y]), it=>{
+///   rect(width: 5cm) // fill in the blanks
+/// })
+/// #plum.plum(```
+/// #[pos(0, 0)] class Foo {
+///   + x(): int
+///   + y(): int
+/// }```)
+/// ````))
+///
+/// #elem-fields(plum.elembic, plum.operation)
 #let operation = e.element.declare(
   "operation",
   prefix: "@preview/plum,v1",
@@ -144,12 +222,28 @@
   },
 
   fields: (
-    e.field("name", content, required: true),
-    e.field("parameters", array, default: ()),
-    e.field("return-type", e.types.option(content), default: none),
+    e.field("name", content, required: true, doc: "the name of the operation"),
+    e.field("parameters", array, default: (), doc: "the parameters of the operation; dictionaries consisting of name and optional type"),
+    e.field("return-type", e.types.option(content), default: none, doc: "the return type of the operation"),
   ),
 )
 
+/// A class, interface or similar element in an UML class diagram
+///
+/// #block(breakable: false, example(mode: "markup", dir: ltr, ratio: 1.5, ````typ
+/// >>> #import plum: elembic as e, diagram, classifier
+/// >>> #show: e.show_(diagram, it => { set text(0.8em, font: ("FreeSans",)); it })
+/// #show: e.cond-set(classifier.with(name: [Foo]),
+///   stroke: red, fill: gray.lighten(50%))
+/// #show: e.cond-set(classifier.with(name: [Bar]),
+///   empty-sections: false)
+/// #plum.plum(```
+/// #[pos(0, 0)] class Foo
+/// #[pos(1, 0)] class Bar
+/// ```)
+/// ````))
+///
+/// #elem-fields(plum.elembic, plum.classifier)
 #let classifier = e.element.declare(
   "classifier",
   doc: "A class, interface or simiar item",
@@ -218,22 +312,22 @@
   },
 
   fields: (
-    e.field("name", content, required: true),
-    e.field("id", e.types.union(auto, str, label), default: auto),
-    e.field("position", e.types.smart(e.types.any), default: auto),
-    e.field("abstract", e.types.smart(bool), default: auto),
-    e.field("final", bool, default: false),
-    e.field("stereotypes", array, default: ()),
-    e.field("kind", str, default: "class"),
-    e.field("members", array, default: ()),
+    e.field("name", content, required: true, doc: "the name of the classifier"),
+    e.field("id", e.types.union(auto, str, label), default: auto, doc: "an ID for the classifier, e.g. as a shorthand for a long name"),
+    e.field("position", e.types.smart(e.types.any), default: auto, doc: "the position of the classifier in the diagram; auto can currently not be rendered!"),
+    e.field("abstract", e.types.smart(bool), default: auto, doc: "whether the classifier is abstract; interfaces are abstract by default"),
+    e.field("final", bool, default: false, doc: "whether the classifier is final"),
+    e.field("stereotypes", array, default: (), doc: "the classifier's stereotypes; interface is added automatically"),
+    e.field("kind", str, default: "class", doc: "the classifier's kind, e.g. class, interface, exception"),
+    e.field("members", array, default: (), doc: "the members of the classifier; usually member instances and dividers"),
 
     // styling
-    e.field("visibility-width", length, default: 0.8em),
-    e.field("empty-sections", bool, default: true),
+    e.field("visibility-width", length, default: 0.8em, doc: "how much space members should reserve on the left for visibility modifiers"),
+    e.field("empty-sections", bool, default: true, doc: "whether to show or collapse empty sections, i.e. if there are no attributes or operations"),
 
-    e.field("stroke", e.types.option(stroke), default: 0.5pt),
-    e.field("fill", e.types.union(none, color, gradient, tiling), default: none),
-    e.field("radius", e.types.union(relative, dictionary), default: 2pt),
+    e.field("stroke", e.types.option(stroke), default: 0.5pt, doc: "the stroke for the classifier border and dividers"),
+    e.field("fill", e.types.union(none, color, gradient, tiling), default: none, doc: "the fill for the classifier"),
+    e.field("radius", e.types.union(relative, dictionary), default: 2pt, doc: "the border radius for the classifier"),
   )
 )
 
