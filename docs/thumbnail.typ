@@ -1,17 +1,15 @@
 #import "/src/lib.typ" as plum
 #import "@preview/crudo:0.1.1"
 
-#set page(height: auto, margin: 5mm, /*fill: none*/)
+#set page(height: auto, margin: 5mm, fill: none)
 
 // style thumbnail for light and dark theme
 #let theme = sys.inputs.at("theme", default: "light")
 #set text(white) if theme == "dark"
 
-#set text(0.85em)
-
 #plum.add-marks()
 
-#let diagram = ```
+#let diagram-src = ```
 #[pos(0, 1)]
 class Foo as X {
   - static attr [1] {readOnly}
@@ -30,16 +28,29 @@ interface Bar
 #[bend(45deg)]
 X ..|> Bar
 #[via((1, 0.4), (2, 0.4))]
-Bar (# bars: "List<Bar>" [0..*]) <--x-o Baz
+Bar (# bars: "List<Bar>" [0..*]) <--x-* Baz
 ```
 
 #grid(
   columns: (1fr, 1fr),
   column-gutter: 1em,
-  crudo.lines(diagram, "-12"),
-  crudo.lines(diagram, "14-"),
+  crudo.lines(diagram-src, "-11"),
+  crudo.lines(diagram-src, "13-"),
 )
 
-// #plum.parse(diagram)
+// #plum.parse(diagram-src)
 
-#align(center, plum.plum(diagram))
+#import plum: elembic as e, diagram, classifier, edge
+
+#show: it => {
+  if theme != "dark" { return it }
+  show: e.set_(classifier, stroke: white)
+  show: e.set_(edge, stroke: white)
+  it
+}
+
+#show: e.show_(diagram, it => { set text(font: ("FreeSans",)); it })
+// #show: e.set_(classifier, empty-sections: false)
+#show: e.cond-set(classifier.with(name: [Foo]), fill: if theme == "dark" { gray.darken(50%) } else { gray.lighten(50%) })
+
+#align(center, plum.plum(diagram-src))

@@ -29,14 +29,17 @@ abstract class Baz {
 #[bend(45deg)]
 X ..|> Bar
 #[via((1, 0.4), (2, 0.4))]
-Bar <--x-o Baz
+Bar <--x-* Baz
 ```
+
+#import plum: elembic as e, classifier.classifier
+#show: e.cond-set(classifier.with(name: [Foo]), fill: gray)
 
 #plum.plum(diagram)
 ````
 
 <picture>
-  <!-- <source media="(prefers-color-scheme: dark)" srcset="./thumbnail-dark.svg"> -->
+  <source media="(prefers-color-scheme: dark)" srcset="./thumbnail-dark.svg">
   <img src="./thumbnail-light.svg">
 </picture>
 
